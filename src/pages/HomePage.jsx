@@ -51,11 +51,52 @@ const expressions = [
 
 const HomePage = () => {
   const [selectedEmotion, setSelectedEmotion] = useState(null);
+  const [showModal, setShowModal] = useState(false);
+  const [name, setName] = useState("");
+  const [description, setDescription] = useState("");
+  // const [expressions, setExpressions] = useState([]);    
+  // newnewnew
+
+  const [expressions, setExpressions] = useState([
+    { emotion: "Happy", description: "Just finished a great book and feeling accomplished!", image: "src/assets/happy.jpg" },
+    { emotion: "Sad", description: "Just finished a great book and feeling accomplished!", image: "src/assets/sad.jpg" },
+    { emotion: "Angry", description: "Just finished a great book and feeling accomplished!", image: "src/assets/angry.jpg" },
+    { emotion: "Curious", description: "Wondering about how clouds form in the sky.", image: "src/assets/curious.jpg" },
+    { emotion: "Calm", description: "Listening to rain sounds while working.", image: "src/assets/calm.jpg" },
+    { emotion: "Excited", description: "Going to see my favorite band tonight!", image: "src/assets/excited.jpg" }
+  ]);
+  
+
 
   const navigate = useNavigate();
 
   const handleEmotionClick = (emotion) => {
-    navigate('/studentpage');
+    setSelectedEmotion(emotion);
+    setShowModal(true); // Show the modal when an emotion is clicked
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    // Logic for submitting the form data (name and description)
+
+    // Find the image of the selected emotion
+    const emotionImage = Emotions.find((emotion) => emotion.name === selectedEmotion)?.image;
+
+    // Create the new expression object   NEW
+    const newExpression = {
+      emotion: selectedEmotion,
+      description,
+      name,
+      image: emotionImage,
+    };
+
+    // Add the new expression to the expressions array    NEW
+    setExpressions((prevExpressions) => [newExpression, ...prevExpressions]);
+
+    // Reset form and close the modal
+    setName("");
+    setDescription("");
+    setShowModal(false);
   };
 
   const studentPageRoute = (e) => {
@@ -64,7 +105,7 @@ const HomePage = () => {
   };
 
   const studentProfileRoute = (e) => {
-    e.preventDefault(); // Prevent default form submission behavior
+    e.preventDefault(); 
     navigate("/studentprofile"); // Redirect to the LoginPage route
   };
 
@@ -102,46 +143,94 @@ const HomePage = () => {
 
       {/* Emotion Selection Section */}
       <section id="emotion-selection" className="my-12 px-6 text-center">
-  <div className="max-w-7xl mx-auto">
-    <h2 className="text-2xl font-semibold mb-4">How are you feeling today?</h2>
-    <div className="grid grid-cols-5 gap-8">
-      {Emotions.map((emotion, index) => (
-        <button
-          key={index}
-          className={`p-4 border rounded-lg text-lg ${selectedEmotion === emotion.name ? "bg-blue-300" : "bg-gray-100 hover:bg-blue-200"}`}
-          onClick={() => handleEmotionClick(emotion.name)}
-        >
-          <img
-            src={emotion.image}
-            alt={emotion.name}
-            className="h-14 w-18 rounded-full mx-auto mb-2"
-          />
-          <span className="block">{emotion.name}</span> {/* Added block for spacing */}
-        </button>
-      ))}
-    </div>
-  </div>
-</section>
+        <div className="max-w-7xl mx-auto">
+          <h2 className="text-2xl font-semibold mb-4">How are you feeling today?</h2>
+          <div className="grid grid-cols-5 gap-8">
+            {Emotions.map((emotion, index) => (
+              <button
+                key={index}
+                className={`p-4 border cursor-pointer rounded-lg text-lg ${selectedEmotion === emotion.name ? "bg-blue-300" : "bg-gray-100 hover:bg-blue-200"}`}
+                onClick={() => handleEmotionClick(emotion.name)}
+              >
+                <img
+                  src={emotion.image}
+                  alt={emotion.name}
+                  className="h-14 w-18 rounded-full mx-auto mb-2"
+                />
+                <span className="block">{emotion.name}</span>
+              </button>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Modal */}
+      {showModal && (
+        <div className="fixed inset-0 backdrop-blur-xs z-50 flex items-center justify-center">
+          <div className="bg-white p-6 rounded-lg w-96">
+            <img
+              src={Emotions.find((emotion) => emotion.name === selectedEmotion)?.image}
+              alt={selectedEmotion}
+              className="w-24 h-24 mx-auto mb-4 rounded-full"
+            />
+            <h2 className="text-2xl font-semibold text-center mb-4">You're feeling {selectedEmotion}</h2>
+            <form onSubmit={handleSubmit}>
+              <div className="mb-4">
+                <label htmlFor="name" className="block text-sm font-semibold">Your Name</label>
+                <input
+                  type="text"
+                  id="name"
+                  className="w-full p-2 border rounded"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  required
+                />
+              </div>
+              <div className="mb-4">
+                <label htmlFor="description" className="block text-sm font-semibold">Why are you feeling this way?</label>
+                <textarea
+                  id="description"
+                  className="w-full p-2 border rounded"
+                  value={description}
+                  onChange={(e) => setDescription(e.target.value)}
+                  required
+                ></textarea>
+              </div>
+              <div className="flex justify-between">
+                <button type="submit" className="bg-blue-500 cursor-pointer text-white py-2 px-4 rounded-lg">Share My Feeling</button>
+                <button
+                  type="button"
+                  onClick={() => setShowModal(false)}
+                  className="bg-gray-500 cursor-pointer text-white py-2 px-4 rounded-lg"
+                >
+                  Cancel
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
 
       {/* Others' Emotions Section */}
       <section className="my-12 flex text-center px-6">
-  <div className="max-w-7xl mx-auto">
-    <h2 className="text-2xl font-semibold mb-4">What others are feeling</h2>
-    <div className="grid grid-cols-3 gap-4">
-      {expressions.map((expression, index) => (
-        <div key={index} className="bg-blue-50 p-4 rounded-lg shadow-md text-center">
-          <img
-            src={expression.image}
-            alt={expression.emotion}
-            className="h-16 w-16 rounded-full mx-auto mb-2"
-          />
-          <h3 className="font-bold text-lg">{expression.emotion}</h3>
-          <p className="text-sm text-gray-700">{expression.description}</p>
+        <div className="max-w-7xl mx-auto">
+          <h2 className="text-2xl font-semibold mb-4">What others are feeling</h2>
+          <div className="grid grid-cols-3 gap-4">
+            {expressions.map((expression, index) => (
+              <div key={index} className="bg-blue-50 p-4 rounded-lg shadow-md text-center">
+                <img
+                  src={expression.image}
+                  alt={expression.emotion}
+                  className="h-16 w-16 rounded-full mx-auto mb-2"
+                />
+                <h3 className="font-bold text-lg">{expression.emotion}</h3>
+                <p className="text-sm text-gray-700">{expression.description}</p>
+              </div>
+            ))}
+          </div>
         </div>
-      ))}
-    </div>
-  </div>
-</section>
+      </section>
+      
 <div id="activity-selection" className="bg-gray-100 min-h-screen flex flex-col items-center justify-center py-8">
       <div className="container max-w-7xl px-4">
         {/* Header */}
