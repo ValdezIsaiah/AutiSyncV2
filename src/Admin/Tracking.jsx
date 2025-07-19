@@ -1,6 +1,7 @@
 import React from 'react';
 import { CheckCircleIcon } from '@heroicons/react/24/solid';
 import { useNavigate } from 'react-router-dom';
+import AdminProfile from './AdminProfile';
 
 const Tracking = () => {
   const metrics = [
@@ -131,6 +132,11 @@ const Tracking = () => {
     navigate("/"); // Redirect to the LoginPage route
   };
 
+  const AdminProfile = (e) => {
+    e.preventDefault(); // Prevent default form submission behavior
+    navigate("/adminprofile"); // Redirect to the LoginPage route
+  };
+
   return (
     <div className="bg-gray-100 min-h-screen ">
         <header className="bg-blue-500 text-white py-3">
@@ -143,16 +149,16 @@ const Tracking = () => {
             <a href="/expressionwall"  className="text-white hover:text-gray-300">Expression Wall</a>
           </nav>
           <div className="flex items-center">
-            <img
+            <img onClick={AdminProfile}
               src="/src/assets/kidprofile1.jpg" // Replace with the profile image URL
               alt="Profile Icon"
-              className="h-8 w-8 rounded-full"
+              className="h-8 w-8 rounded-full cursor-pointer  "
             />
           </div>
         </div>
       </header>
       <div className="p-8">
-      <div className="flex justify-between items-start mb-6 -mt-6">
+      <div className="flex justify-between items-start mb-6 -mt-2">
         <div>
           <h1 className="text-3xl font-bold text-gray-800">Admin Dashboard</h1>
           <p className="text-gray-500">Monitor user progress and activity analytics</p>
