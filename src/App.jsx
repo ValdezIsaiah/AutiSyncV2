@@ -15,6 +15,7 @@ import ActivitiesPage from './Admin/Activities';
 import AddActivity from './Admin/AddActivity';
 import ExpressionWall from './Admin/ExpressionWall';
 import Tracking from './Admin/Tracking';
+import AdminProfile from './Admin/AdminProfile';
  
 
 function App() {
@@ -35,6 +36,7 @@ function App() {
       <Route path="/addactivity" element={<AddActivity />} />
       <Route path="/expressionwall" element={<ExpressionWall />} />
       <Route path="/tracking" element={<Tracking />} />
+      <Route path="/adminprofile" element={<AdminProfile />} />
       
     </Routes>
   );
