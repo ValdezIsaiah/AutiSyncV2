@@ -12,6 +12,11 @@ const ActivitiesPage = () => {
     navigate("/addactivity"); // Redirect to the LoginPage route
   };
 
+  const AdminProfile = (e) => {
+    e.preventDefault(); // Prevent default form submission behavior
+    navigate("/adminprofile"); // Redirect to the LoginPage route
+  };
+
   return (
     <div className=" bg-gray-100">
       {/* Header */}
@@ -25,15 +30,15 @@ const ActivitiesPage = () => {
             <a href="/expressionwall" className="text-white hover:text-gray-300">Expression Wall</a>
           </nav>
           <div className="flex items-center">
-            <img
+            <img onClick={AdminProfile}
               src="/src/assets/kidprofile1.jpg" // Replace with the profile image URL
               alt="Profile Icon"
-              className="h-8 w-8 rounded-full"
+              className="h-8 w-8 rounded-full cursor-pointer"
             />
           </div>
         </div>
       </header>
-      <div className="bg-white shadow-md rounded-lg p-6 m-15">
+      <div className="bg-white shadow-md rounded-lg p-6 mt-6 m-auto max-w-6xl">
         <div className="flex justify-between items-center">
           <h2 className="text-xl font-semibold text-blue-600">Activities</h2>
           <button onClick={addactivity} className="bg-blue-500 text-white px-3 py-1.5 rounded-lg hover:bg-blue-600 cursor-pointer transition">
