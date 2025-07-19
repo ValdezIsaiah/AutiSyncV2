@@ -12,10 +12,10 @@ function SignupPage() {
 
   return (
     <div className="min-h-screen bg-blue-100 flex items-center justify-center">
-      <div className="w-full max-w-md bg-white px-8 py-4 my-4 rounded-lg shadow-lg">
+      <div className="w-full max-w-md bg-white px-8 py-4 my-6 rounded-lg shadow">
         <div className="">
-        <h2 className="text-2xl font-semibold text-center text-gray-800 mb-2">AutiSync</h2>
-        <h3 className="text-center text-gray-600 mb-4">Create Your Account!</h3>
+        <h2 className="text-2xl font-semibold text-center text-blue-600 mb-2">AutiSync</h2>
+        <h3 className="text-center text-gray-600 mb-3">Create Your Account!</h3>
         <p className="text-center text-sm text-gray-500 mb-6">
           Enter details below be sure to guide the kids to get started with their learning journey.
         </p>
