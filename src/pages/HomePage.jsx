@@ -63,7 +63,9 @@ const HomePage = () => {
     { emotion: "Angry", description: "Just finished a great book and feeling accomplished!", image: "src/assets/angry.jpg" },
     { emotion: "Curious", description: "Wondering about how clouds form in the sky.", image: "src/assets/curious.jpg" },
     { emotion: "Calm", description: "Listening to rain sounds while working.", image: "src/assets/calm.jpg" },
-    { emotion: "Excited", description: "Going to see my favorite band tonight!", image: "src/assets/excited.jpg" }
+    { emotion: "Excited", description: "Going to see my favorite band tonight!", image: "src/assets/excited.jpg" },
+    { emotion: "Curious", description: "Wondering what it feels to be a dog.", image: "src/assets/curious.jpg" },
+    { emotion: "Sad", description: "I lost my fish!", image: "src/assets/sad.jpg" },
   ]);
   
 
@@ -112,12 +114,12 @@ const HomePage = () => {
   return (
     <div className="font-sans ">
       {/* Navbar */}
-      <header className="bg-blue-500 text-white py-2">
-        <div className="max-w-7xl mx-auto flex justify-between items-center px-6">
-        <h2 className="text-white text-lg  font-bold">AutiSync</h2>
-          <nav className="flex space-x-6 ml-auto mr-6">
+      <header className="bg-blue-500 text-white py-3">
+        <div className="w-ful mx-auto flex justify-between  px-8">
+        <h2 className="text-white text-2xl  font-bold">AutiSync</h2>
+          <nav className="flex text-lg space-x-8 ml-auto mr-6">
             <a href="/studentpage" className="text-white hover:text-gray-300">Home</a>
-            <a href="#activity-selection" className="text-white hover:text-gray-300">Activity</a>
+            <a href="/choosecategory" className="text-white hover:text-gray-300">Activity</a>
             <a href="#emotion-selection" className="text-white hover:text-gray-300">Expression</a>
           </nav>
           <div onClick={studentProfileRoute} className="flex items-center cursor-pointer">
@@ -135,7 +137,7 @@ const HomePage = () => {
         <div className="max-w-7xl mx-auto">
           <h2 className="text-2xl font-semibold mb-1">Video Tutorial</h2>
           <p className="text-base mb-3">Empowering daily life skills for everyone.</p>
-          <div className="bg-gray-200 h-64 w-170 flex justify-center items-center text-lg rounded">
+          <div className="bg-gray-200 h-70 w-170 flex justify-center items-center text-lg rounded">
             Loading video tutorial...
           </div>
         </div>
@@ -144,7 +146,7 @@ const HomePage = () => {
       {/* Emotion Selection Section */}
       <section id="emotion-selection" className="my-12 px-6 text-center">
         <div className="max-w-7xl mx-auto">
-          <h2 className="text-2xl font-semibold mb-4">How are you feeling today?</h2>
+          <h2 className="text-2xl font-semibold mb-5">How are you feeling today?</h2>
           <div className="grid grid-cols-5 gap-8">
             {Emotions.map((emotion, index) => (
               <button
@@ -212,30 +214,100 @@ const HomePage = () => {
       )}
 
       {/* Others' Emotions Section */}
-      <section className="my-12 flex text-center px-6">
-        <div className="max-w-7xl mx-auto">
+      <section className="my-10 flex text-center px-6">
+        <div className="max-w-full mx-auto">
           <h2 className="text-2xl font-semibold mb-4">What others are feeling</h2>
-          <div className="grid grid-cols-3 gap-4">
-            {expressions.map((expression, index) => (
-              <div key={index} className="bg-blue-50 p-4 rounded-lg shadow-md text-center">
-                <img
-                  src={expression.image}
-                  alt={expression.emotion}
-                  className="h-16 w-16 rounded-full mx-auto mb-2"
-                />
-                <h3 className="font-bold text-lg">{expression.emotion}</h3>
-                <p className="text-sm text-gray-700">{expression.description}</p>
-              </div>
-            ))}
+          <div className="grid grid-cols-4 gap-4">
+          {expressions.map((expression, index) => (
+  <div key={index} className="bg-blue-50 p-4 rounded-lg shadow-md text-left relative">
+    <img
+      src={expression.image}
+      alt={expression.emotion}
+      className="h-14 w-14 rounded-full mb-2 mx-auto "
+    />
+    <h3 className="font-bold text-lg text-center">{expression.emotion}</h3>
+    <p className="text-sm text-gray-700 mb-1">{expression.description}</p>
+    <p className="text-xs text-gray-500 italic mb-4 mt-1">Posted by {expression.name || "Anonymous"}</p>
+
+    {/* Show comment section if toggled */}
+    {expression.showComment && (
+      <div className="mt-2">
+        <input
+          type="text"
+          placeholder="Write a comment..."
+          className="w-full text-sm p-2 border border-gray-300 rounded mb-2"
+          value={expression.currentComment || ""}
+          onChange={(e) => {
+            const updated = [...expressions];
+            updated[index].currentComment = e.target.value;
+            setExpressions(updated);
+          }}
+        />
+        <button
+          onClick={() => {
+            const updated = [...expressions];
+            const comment = updated[index].currentComment;
+            if (!comment) return;
+            updated[index].comments = [...(updated[index].comments || []), comment];
+            updated[index].currentComment = "";
+            setExpressions(updated);
+          }}
+          className="bg-blue-700 text-white text-sm px-3 py-1 rounded hover:bg-blue-800 cursor-pointer"
+        >
+          Post
+        </button>
+        {/* BACK BUTTON */}
+    <button
+      onClick={() => {
+        const updated = [...expressions];
+        updated[index].showComment = false;
+        setExpressions(updated);
+      }}
+      className="bg-red-700 text-white text-sm px-3 py-1 rounded hover:bg-red-800 cursor-pointer"
+    >
+      Back
+    </button>
+
+        {/* Render Comments */}
+        <div className="mt-2 space-y-1 text-base max-h-32 overflow-y-auto pr-1">
+          {expression.comments?.map((comment, cIndex) => (
+            <p key={cIndex} className="text-xs text-gray-700">comment: {comment}</p>
+          ))}
+        </div>
+      </div>
+    )}
+
+    {/* Footer Section */}
+    <div
+  className="text-xl text-black-500 text-sm cursor-pointer hover:text-blue-600"
+  onClick={() => {
+    const updated = [...expressions];
+    updated[index].showComment = !updated[index].showComment;
+    setExpressions(updated);
+  }}
+>
+  💬 <span className="text-xs text-gray-500">
+    comment
+    {expression.comments && expression.comments.length > 0 && (
+      <> ({expression.comments.length})</>
+    )}
+  </span>
+</div>
+    <div className="absolute bottom-2 right-4 text-xs text-gray-500">
+      {new Date().toLocaleDateString()} {new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+    </div>
+  </div>
+))}
+
           </div>
         </div>
       </section>
       
-<div id="activity-selection" className="bg-gray-100 min-h-screen flex flex-col items-center justify-center py-8">
+<div id="activity-selection" className="bg-gray-100 min-h-screen flex flex-col items-center justify-center py-6">
       <div className="container max-w-7xl px-4">
         {/* Header */}
         <div className="text-center mb-12">
-          <h1 className="text-2xl font-semibold text-blue-600 mb-4">
+          <h1 className="text-2xl font-semibold text-blue-600 mb-5 -mt-3">
             Categories
           </h1>
           <div className="flex justify-center gap-8">
