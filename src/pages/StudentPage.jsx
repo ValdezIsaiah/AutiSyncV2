@@ -14,18 +14,22 @@ const StudentPage = () => {
       navigate("/choosecategory"); // Redirect to the LoginPage route
     };
 
+    const goToProfile = () => {
+      navigate('/studentprofile');
+    };
+
   return (
     <div className="min-h-screen bg-gray-100">
-      <header className="bg-blue-500 text-white py-2">
-        <div className="max-w-7xl mx-auto flex justify-between items-center px-6">
-        <h2 className="text-white text-lg  font-bold">AutiSync</h2>
-          <nav className="flex space-x-6 ml-auto mr-6">
-            <a href="/studentpage" className="text-white hover:text-gray-300">Home</a>
+      <header className="bg-blue-500 text-white py-3">
+        <div className="w-ful mx-auto flex justify-between  px-8">
+        <h2 className="text-white text-2xl  font-bold">AutiSync</h2>
+          <nav className="flex text-lg space-x-6 ml-auto mr-6">
+            <a href="/home" className="text-white hover:text-gray-300">Home</a>
             <a href="/choosecategory" className="text-white hover:text-gray-300">Activity</a>
             <a href="#emotion-selection" className="text-white hover:text-gray-300">Expression</a>
           </nav>
-          <div className="flex items-center">
-            <img
+          <div className="flex items-center cursor-pointer">
+            <img onClick={goToProfile}
               src="/src/assets/kidprofile1.jpg" // Replace with the profile image URL
               alt="Profile Icon"
               className="h-8 w-8 rounded-full"
@@ -43,9 +47,9 @@ const StudentPage = () => {
 
       {/* Main Content */}
       {/* <main className="flex "> */}
-      <div className="container mx-auto p-8 flex flex-col gap-8">
+      <div className="container mx-auto p-6 flex flex-col gap-8">
         {/* Left Column: Streak */}
-        <div className="bg-white p-6 rounded-lg shadow-lg flex flex-col -ml-25 justify-between w-85">
+        <div className="bg-white p-6 rounded-lg shadow-lg flex flex-col justify-between w-95">
         <div flex flex-rows-2>
           <h2 className="text-xl font-bold text-sky-700">Welcome, </h2>
           <h1 className="text-[32px] font-semibold mt-1">Chris!</h1>
@@ -55,13 +59,13 @@ const StudentPage = () => {
           </p>
         </div>
 
-        <div className="bg-white p-6 rounded-lg shadow-lg flex flex-col -ml-25 justify-between w-85">
+        <div className="bg-white p-6 rounded-lg shadow-lg flex flex-col justify-between w-95">
            <div className="flex flex-rows-2">
-            <span className="font-bold leading-tight  text-[40px] w-50">4th day Streak!</span>
+            <span className="font-bold leading-tight  text-[46px] w-50">4th day Streak!</span>
             <img
               src="/src/assets/firesticker.png" // Replace with the actual image path
               alt="Streak Icon"
-              className="h-28 w-28 rounded-full ml-0  "
+              className="h-28 w-30 rounded-full ml-0  "
             />
             </div> 
             <p className="text-sm mt-5 text-gray-600">You’re doing Great, Keep Going!</p>
@@ -70,8 +74,8 @@ const StudentPage = () => {
         </div>
 
         {/* Right Column: Badges */}
-        <div className="bg-white p-6 rounded-lg shadow-lg w-200 ml-100 mt-[-545px] ">
-          <div className="flex flex-rows-2 gap-65">
+        <div className="bg-white p-6 rounded-lg shadow-lg w-265 ml-111 mt-[-522px] ">
+          <div className="flex flex-rows-2 gap-135 ml-3">
           <div>
             <h2 className="text-2xl font-bold text-sky-700">Badges</h2>
              <p className="mt-2 text-gray-600">Perform Activities to Collect Badges!</p>
