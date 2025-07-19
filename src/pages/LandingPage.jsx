@@ -10,12 +10,17 @@ const LandingPage = () => {
     navigate("/loginpage"); // Redirect to the LoginPage route
   };
 
+  const adminpage = (e) => {
+    e.preventDefault(); // Prevent default form submission behavior
+    navigate("/activities"); // Redirect to the LoginPage route
+  };
+
   return (
     <div className="bg-blue-50">
       {/* Header */}
       <header className="bg-white text-sky-700 p-3">
         <div className="container mx-auto max-w-full flex justify-between items-center">
-          <h1 className="text-2xl font-bold">AutiSync</h1>
+          <h1 onClick={adminpage} className="text-2xl font-bold">AutiSync</h1>
           <button  onClick={handleLogin} className="bg-sky-700 hover:bg-sky-600 text-white px-3 py-1 rounded ml-auto">Log In</button>
         </div>
       </header>
