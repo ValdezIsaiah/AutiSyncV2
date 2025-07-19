@@ -42,10 +42,10 @@ export default function StudentProfile() {
   return (
     <div className="relative min-h-screen bg-gray-100">
       {/* Top Nav or Main Page */}
-      <header className="bg-blue-500 text-white py-2">
-        <div className="max-w-7xl mx-auto flex justify-between items-center px-6">
-          <h2 className="text-white text-lg font-bold">AutiSync</h2>
-          <nav className="flex space-x-6 ml-auto mr-6">
+      <header className="bg-blue-500 text-white py-3">
+        <div className="w-ful mx-auto flex justify-between  px-8">
+        <h2 className="text-white text-2xl  font-bold">AutiSync</h2>
+          <nav className="flex text-lg space-x-8 ml-auto mr-6">
             <a href="/studentpage" className="text-white hover:text-gray-300">Home</a>
             <a href="#activity-selection" className="text-white hover:text-gray-300">Activity</a>
             <a href="#emotion-selection" className="text-white hover:text-gray-300">Expression</a>
@@ -68,7 +68,7 @@ export default function StudentProfile() {
 
           {/* Modal */}
           <div className="fixed inset-0 z-20 flex items-center justify-center">
-            <div className="bg-white rounded-xl shadow-xl p-6 w-[90%] max-w-md text-center relative">
+            <div className="bg-white rounded-2xl shadow-xl p-6 w-[90%] max-w-lg text-center relative">
               {/* Profile Image */}
               <img
                 src="/src/assets/kidprofile1.jpg"
