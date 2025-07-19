@@ -77,7 +77,7 @@ const AddActivity = () => {
         </div>
       </header>
 
-      <div className="container mt-5 mx-auto px-4 py-6 w-280">
+      <div className="container mt-5 px-4 py-6 m-auto max-w-6xl">
       
       <form onSubmit={handleSubmit} className="bg-[#BDF1FF] p-6 rounded-lg shadow-md">
       <h2 className="text-xl font-bold mb-0">Activity Details</h2>
@@ -142,8 +142,8 @@ const AddActivity = () => {
     
 
 
-      <h1 className="ml-30 text-xl ">Badges</h1>
-      <div className="container -mt-4 mx-auto px-4 py-6 w-280">
+      <h1 className="ml-58 text-xl ">Badges</h1>
+      <div className="container -mt-4 px-4 py-6 m-auto max-w-6xl">
         <form onSubmit={handleSubmit} className="bg-[#BDF1FF] p-6 rounded-lg shadow-md">
           <button className="bg-blue-700 text-white text-sm px-3 py-1 my-0 cursor-pointer rounded   hover:bg-blue-800">
           ADD BADGE
@@ -154,8 +154,8 @@ const AddActivity = () => {
         </div>
       </div>
       
-      <h1 className="ml-30 text-xl ">Questions</h1>
-      <div className="container -mt-4 mx-auto px-4 py-6 w-280">
+      <h1 className="ml-58 text-xl">Questions</h1>
+      <div className="container -mt-4  px-4 py-6 mx-auto max-w-6xl">
         <form onSubmit={handleSubmit} className="bg-[#BDF1FF] p-6 rounded-lg shadow-md">
         <h2 className="text-lg mb-0">Question 1 </h2>
         <div className="mb-4">
