@@ -31,42 +31,46 @@ const ChooseCategory = () => {
     navigate("/choosedifficulty"); // Redirect to the ChooseDifficulty route
   };
 
+  const goToProfile = () => {
+    navigate('/studentprofile');
+  };
+
   return (
     <div className="bg-gray-100 min-h-screen">
       {/* Header */}
-      <header className="bg-blue-500 text-white py-2">
-        <div className="max-w-7xl mx-auto flex justify-between items-center px-6">
-          <h2 className="text-white text-lg  font-bold">AutiSync</h2>
-          <nav className="flex space-x-6 ml-auto mr-6">
+      <header className="bg-blue-500 text-white py-3">
+        <div className="w-ful mx-auto flex justify-between  px-8">
+        <h2 className="text-white text-2xl  font-bold">AutiSync</h2>
+          <nav className="flex text-lg space-x-6 ml-auto mr-6">
             <a href="/studentpage" className="text-white hover:text-gray-300">Home</a>
             <a href="#activity-selection" className="text-white hover:text-gray-300">Activity</a>
             <a href="#emotion-selection" className="text-white hover:text-gray-300">Expression</a>
           </nav>
           <div className="flex items-center">
-            <img
+            <img onClick={goToProfile}
               src="/src/assets/kidprofile1.jpg" // Replace with the profile image URL
               alt="Profile Icon"
-              className="h-8 w-8 rounded-full"
+              className="h-8 w-8 rounded-full cursor-pointer transition duration-300"
             />
           </div>
         </div>
       </header>
 
       {/* Main content */}
-      <main className="max-w-screen-md mx-auto py-10 px-4 text-center">
+      <main className="max-w-screen-lg mx-auto py-10 px-4 text-center">
         <div className="mb-8">
           <img 
             src="/src/assets/categoryheader.jpg" 
             alt="Main image" 
-            className="w-500 h-60 -my-5"
+            className="w-500 h-70 -my-5"
           />
         </div>
 
-        <div className="flex flex-rows-2 gap-100">
-          <h2 className="text-2xl font-bold mb-6">Choose Category</h2>
+        <div className="flex flex-rows-2 gap-145">
+          <h2 className="text-3xl font-bold mt-3 mb-6">Choose Category</h2>
           {/* Join a Friend Button */}
           <button 
-            className="bg-blue-500 text-white px-6 py-0 h-10 rounded-lg shadow-md hover:bg-blue-600 cursor-pointer"
+            className="bg-blue-500 text-white text-lg font-semibold px-6 py-0 h-11 rounded-lg mt-3 shadow-md hover:bg-blue-600 cursor-pointer"
             onClick={handleJoinFriendClick}
           >
             Join a Friend
@@ -76,30 +80,30 @@ const ChooseCategory = () => {
         <div className="flex flex-cols-3 gap-5 mb-6">
           {/* Category buttons */}
           <button 
-            className="bg-blue-100 cursor-pointer rounded-lg shadow-md hover:bg-blue-200 w-130 h-35" 
+            className="bg-blue-100 cursor-pointer rounded-lg shadow-md hover:bg-blue-200 w-130 h-43" 
             onClick={handleCategoryClick}
           >
             <div className="text-center">
-              <div className="text-3xl mb-2">🎓</div>
-              <div className="font-semibold text-xl">Academic</div>
+              <div className="text-5xl mb-2">🎓</div>
+              <div className="font-semibold text-2xl">Academic</div>
             </div>
           </button>
           <button 
-            className="bg-blue-100 cursor-pointer py-4 rounded-lg shadow-md hover:bg-blue-200 w-130 h-35" 
+            className="bg-blue-100 cursor-pointer py-4 rounded-lg shadow-md hover:bg-blue-200 w-130 h-43" 
             onClick={() => handleCategoryClick('Social / Daily Life Skill')}
           >
             <div className="text-center">
-              <div className="text-3xl mb-2">👫</div>
-              <div className="font-semibold text-xl">Social / Daily Life Skill</div>
+              <div className="text-5xl mb-2">👫</div>
+              <div className="font-semibold text-2xl">Social / Daily Life Skill</div>
             </div>
           </button>
           <button 
-            className="bg-blue-100 py-4 cursor-pointer rounded-lg shadow-md hover:bg-blue-200 w-130 h-35" 
+            className="bg-blue-100 py-4 cursor-pointer rounded-lg shadow-md hover:bg-blue-200 w-130 h-43" 
             onClick={() => handleCategoryClick('Object')}
           >
             <div className="text-center">
-              <div className="text-3xl mb-2">✏️</div>
-              <div className="font-semibold text-xl">Object</div>
+              <div className="text-5xl mb-2">✏️</div>
+              <div className="font-semibold text-2xl">Object</div>
             </div>
           </button>
         </div>
@@ -114,7 +118,7 @@ const ChooseCategory = () => {
             <input
               type="text"
               placeholder="Enter room number to join a friend"
-              className="w-full p-2 mb-4 border rounded-md"
+              className="w-full p-4 mb-4 border rounded-md"
               value={roomNumber}
               onChange={handleInputChange}
             />
