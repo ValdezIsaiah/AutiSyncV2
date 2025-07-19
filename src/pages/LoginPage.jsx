@@ -27,7 +27,7 @@ function LoginPage() {
 
   return (
     <div className="flex justify-center items-center h-screen bg-blue-50">
-      <div className="bg-white p-6 rounded-lg shadow-md w-full max-w-sm sm:max-w-xs">
+      <div className="bg-white p-6 rounded-lg shadow w-full max-w-md sm:max-w-md ">
         <h2 className="text-3xl font-semibold text-center text-blue-600 mb-2">
           AutiSync
         </h2>
