@@ -65,6 +65,11 @@ const ExpressionWall = () => {
   const [dateFrom, setDateFrom] = useState('');
   const [dateTo, setDateTo] = useState('');
 
+  const AdminProfile = (e) => {
+    e.preventDefault(); // Prevent default form submission behavior
+    navigate("/adminprofile"); // Redirect to the LoginPage route
+  };
+
   return (
     
     <div className="w-full bg-[#F8F9FB] ">
@@ -78,10 +83,10 @@ const ExpressionWall = () => {
             <a href="/expressionwall"  className="text-white hover:text-gray-300">Expression Wall</a>
           </nav>
           <div className="flex items-center">
-            <img
+            <img onClick={AdminProfile}
               src="/src/assets/kidprofile1.jpg" // Replace with the profile image URL
               alt="Profile Icon"
-              className="h-8 w-8 rounded-full"
+              className="h-8 w-8 rounded-full cursor-pointer"
             />
           </div>
         </div>
