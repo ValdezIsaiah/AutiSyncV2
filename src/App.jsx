@@ -1,6 +1,8 @@
 // src/App.jsx
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
+import ScrollToTop from './Admin/ScrollToTop';
+
 import LoginPage from './pages/LoginPage';
 import LandingPage from './pages/LandingPage';
 import HomePage from './pages/Homepage';
@@ -9,6 +11,7 @@ import StudentPage from './pages/StudentPage';
 import ChooseCategory from './pages/ChooseCategory';
 import ChooseDifficulty from './pages/ChooseDifficulty';
 import StudentProfile from './pages/StudentProfile';
+import EasyAcademicFlashcard from './pages/AcademicFlashcard/EasyAcademicFlashcard';
 
 //Admin pages
 import ActivitiesPage from './Admin/Activities';
@@ -16,10 +19,13 @@ import AddActivity from './Admin/AddActivity';
 import ExpressionWall from './Admin/ExpressionWall';
 import Tracking from './Admin/Tracking';
 import AdminProfile from './Admin/AdminProfile';
+
  
 
 function App() {
   return (
+    <>
+    <ScrollToTop />
     <Routes>
       <Route path="/loginpage" element={<LoginPage />} />
       <Route path="/home" element={<HomePage />} />
@@ -29,6 +35,7 @@ function App() {
       <Route path="/choosecategory" element={<ChooseCategory />} />
       <Route path="/choosedifficulty" element={<ChooseDifficulty />} />
       <Route path="/studentprofile" element={<StudentProfile />} />
+      <Route path="/easyacademicflashcard" element={<EasyAcademicFlashcard />} />
       
 
       {/* Admin Pages */}
@@ -38,7 +45,9 @@ function App() {
       <Route path="/tracking" element={<Tracking />} />
       <Route path="/adminprofile" element={<AdminProfile />} />
       
+      
     </Routes>
+    </>
   );
 }
 
