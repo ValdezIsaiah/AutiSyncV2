@@ -52,16 +52,18 @@ const expressions = [
 const HomePage = () => {
   const [selectedEmotion, setSelectedEmotion] = useState(null);
   const [showModal, setShowModal] = useState(false);
+  const [selectedLevel, setSelectedLevel] = useState(3); // Default level set to 3
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
+
   // const [expressions, setExpressions] = useState([]);    
   // newnewnew
 
   const [expressions, setExpressions] = useState([
-    { emotion: "Happy", description: "Just finished a great book and feeling accomplished!", image: "src/assets/happy.jpg" },
-    { emotion: "Sad", description: "Just finished a great book and feeling accomplished!", image: "src/assets/sad.jpg" },
-    { emotion: "Angry", description: "Just finished a great book and feeling accomplished!", image: "src/assets/angry.jpg" },
-    { emotion: "Curious", description: "Wondering about how clouds form in the sky.", image: "src/assets/curious.jpg" },
+    { emotion: "Happy", description: "Feeling Happy at level 5", image: "src/assets/happy.jpg" },
+    { emotion: "Sad", description: "Feeling Sad at level 2", image: "src/assets/sad.jpg" },
+    { emotion: "Angry", description: "Feeling Angry at level 4", image: "src/assets/angry.jpg" },
+    { emotion: "Curious", description: "Feeling Curious at level 1", image: "src/assets/curious.jpg" },
     { emotion: "Calm", description: "Listening to rain sounds while working.", image: "src/assets/calm.jpg" },
     { emotion: "Excited", description: "Going to see my favorite band tonight!", image: "src/assets/excited.jpg" },
     { emotion: "Curious", description: "Wondering what it feels to be a dog.", image: "src/assets/curious.jpg" },
@@ -72,34 +74,38 @@ const HomePage = () => {
 
   const navigate = useNavigate();
 
-  const handleEmotionClick = (emotion) => {
+   const handleEmotionClick = (emotion) => {
     setSelectedEmotion(emotion);
     setShowModal(true); // Show the modal when an emotion is clicked
   };
 
   const handleSubmit = (e) => {
-    e.preventDefault();
-    // Logic for submitting the form data (name and description)
+  e.preventDefault();
 
-    // Find the image of the selected emotion
-    const emotionImage = Emotions.find((emotion) => emotion.name === selectedEmotion)?.image;
+  // Find the image of the selected emotion
+  const emotionImage = Emotions.find((emotion) => emotion.name === selectedEmotion)?.image;
 
-    // Create the new expression object   NEW
-    const newExpression = {
-      emotion: selectedEmotion,
-      description,
-      name,
-      image: emotionImage,
-    };
-
-    // Add the new expression to the expressions array    NEW
-    setExpressions((prevExpressions) => [newExpression, ...prevExpressions]);
-
-    // Reset form and close the modal
-    setName("");
-    setDescription("");
-    setShowModal(false);
+  // Create the new expression object with intensity level
+  const newExpression = {
+    emotion: selectedEmotion,
+    description: `Feeling ${selectedEmotion} at level ${selectedLevel}`,
+    name: "Anonymous", // Or handle this as required
+    image: emotionImage,
+    level: selectedLevel, // Store the level of intensity
   };
+
+  // Add the new expression to the expressions array
+  setExpressions((prevExpressions) => [newExpression, ...prevExpressions]);
+
+  // Reset form and close the modal
+  setShowModal(false);
+};
+
+const getSliderBackground = () => {
+  // Calculate the percentage for each level of the slider
+  const percentage = (selectedLevel - 1) * 25; // From 1 (0%) to 5 (100%)
+  return `linear-gradient(to right, green ${percentage}%, yellow ${percentage + 20}%, orange ${percentage + 40}%, red ${percentage + 60}%)`;
+};
 
   const studentPageRoute = (e) => {
     e.preventDefault(); // Prevent default form submission behavior
@@ -137,9 +143,16 @@ const HomePage = () => {
         <div className="max-w-7xl mx-auto">
           <h2 className="text-2xl font-semibold mb-1">Video Tutorial</h2>
           <p className="text-base mb-3">Empowering daily life skills for everyone.</p>
-          <div className="bg-gray-200 h-70 w-170 flex justify-center items-center text-lg rounded">
-            Loading video tutorial...
-          </div>
+          <video
+          className="w-full rounded-lg h-75 shadow-lg"
+          controls
+          autoPlay  
+          loop
+          muted
+        >
+          <source src="/public/assets/assets/videotutorial.mp4" type="video/mp4" />
+          Your browser does not support the video tag.
+        </video>
         </div>
       </section>
 
@@ -168,55 +181,65 @@ const HomePage = () => {
 
       {/* Modal */}
       {showModal && (
-        <div className="fixed inset-0 backdrop-blur-xs z-50 flex items-center justify-center">
-          <div className="bg-white p-6 rounded-lg w-96">
-            <img
-              src={Emotions.find((emotion) => emotion.name === selectedEmotion)?.image}
-              alt={selectedEmotion}
-              className="w-24 h-24 mx-auto mb-4 rounded-full"
-            />
-            <h2 className="text-2xl font-semibold text-center mb-4">You're feeling {selectedEmotion}</h2>
-            <form onSubmit={handleSubmit}>
-              <div className="mb-4">
-                <label htmlFor="name" className="block text-sm font-semibold">Your Name</label>
-                <input
-                  type="text"
-                  id="name"
-                  className="w-full p-2 border rounded"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  required
-                />
-              </div>
-              <div className="mb-4">
-                <label htmlFor="description" className="block text-sm font-semibold">Why are you feeling this way?</label>
-                <textarea
-                  id="description"
-                  className="w-full p-2 border rounded"
-                  value={description}
-                  onChange={(e) => setDescription(e.target.value)}
-                  required
-                ></textarea>
-              </div>
-              <div className="flex justify-between">
-                <button type="submit" className="bg-blue-500 cursor-pointer text-white py-2 px-4 rounded-lg">Share My Feeling</button>
-                <button
-                  type="button"
-                  onClick={() => setShowModal(false)}
-                  className="bg-gray-500 cursor-pointer text-white py-2 px-4 rounded-lg"
-                >
-                  Cancel
-                </button>
-              </div>
-            </form>
-          </div>
+  <div className="fixed inset-0 backdrop-blur-xs z-50 flex items-center justify-center">
+    <div className="bg-white p-6 rounded-lg w-96">
+      <img
+        src={Emotions.find((emotion) => emotion.name === selectedEmotion)?.image}
+        alt={selectedEmotion}
+        className="w-24 h-24 mx-auto mb-4 rounded-full"
+      />
+      <h2 className="text-2xl font-semibold text-center mb-4">You're feeling {selectedEmotion}</h2>
+
+      {/* Horizontal Range Slider with Dynamic Color */}
+      <div className="mb-4">
+        <label htmlFor="emotion-level" className="block text-lg font-semibold">
+          Select the level of your emotion:
+        </label>
+        <input
+            type="range"
+            id="emotion-level"
+            min="1"
+            max="5"
+            value={selectedLevel}
+            onChange={(e) => setSelectedLevel(Number(e.target.value))}  // Ensure value is treated as a number
+            className="w-full  mt-4"
+            style={{
+              background: getSliderBackground(),  // Apply the dynamic background
+            }}
+          />
+        <div className="flex justify-between text-xs mt-2">
+          <span>1</span>
+          <span>2</span>
+          <span>3</span>
+          <span>4</span>
+          <span>5</span>
         </div>
-      )}
+      </div>
+
+      <div className="flex justify-between mt-6">
+        <button
+          type="button"
+          onClick={handleSubmit}
+          className="bg-blue-500 cursor-pointer text-white py-2 px-4 rounded-lg"
+        >
+          Share My Feeling
+        </button>
+        <button
+          type="button"
+          onClick={() => setShowModal(false)}
+          className="bg-gray-500 cursor-pointer text-white py-2 px-4 rounded-lg"
+        >
+          Cancel
+        </button>
+      </div>
+    </div>
+  </div>
+)}
 
       {/* Others' Emotions Section */}
       <section className="my-10 flex text-center px-6">
         <div className="max-w-full mx-auto">
-          <h2 className="text-2xl font-semibold mb-4">What others are feeling</h2>
+          <h2 className="text-2xl font-semibold mb-6 ">What others are feeling</h2>
           <div className="grid grid-cols-4 gap-4">
           {expressions.map((expression, index) => (
   <div key={index} className="bg-blue-50 p-4 rounded-lg shadow-md text-left relative">
@@ -226,73 +249,13 @@ const HomePage = () => {
       className="h-14 w-14 rounded-full mb-2 mx-auto "
     />
     <h3 className="font-bold text-lg text-center">{expression.emotion}</h3>
-    <p className="text-sm text-gray-700 mb-1">{expression.description}</p>
+    <p className="text-lg text-gray-700 mb-1">{expression.description}</p>
     <p className="text-xs text-gray-500 italic mb-4 mt-1">Posted by {expression.name || "Anonymous"}</p>
 
-    {/* Show comment section if toggled */}
-    {expression.showComment && (
-      <div className="mt-2">
-        <input
-          type="text"
-          placeholder="Write a comment..."
-          className="w-full text-sm p-2 border border-gray-300 rounded mb-2"
-          value={expression.currentComment || ""}
-          onChange={(e) => {
-            const updated = [...expressions];
-            updated[index].currentComment = e.target.value;
-            setExpressions(updated);
-          }}
-        />
-        <button
-          onClick={() => {
-            const updated = [...expressions];
-            const comment = updated[index].currentComment;
-            if (!comment) return;
-            updated[index].comments = [...(updated[index].comments || []), comment];
-            updated[index].currentComment = "";
-            setExpressions(updated);
-          }}
-          className="bg-blue-700 text-white text-sm px-3 py-1 rounded hover:bg-blue-800 cursor-pointer"
-        >
-          Post
-        </button>
-        {/* BACK BUTTON */}
-    <button
-      onClick={() => {
-        const updated = [...expressions];
-        updated[index].showComment = false;
-        setExpressions(updated);
-      }}
-      className="bg-red-700 text-white text-sm px-3 py-1 rounded hover:bg-red-800 cursor-pointer"
-    >
-      Back
-    </button>
-
-        {/* Render Comments */}
-        <div className="mt-2 space-y-1 text-base max-h-32 overflow-y-auto pr-1">
-          {expression.comments?.map((comment, cIndex) => (
-            <p key={cIndex} className="text-xs text-gray-700">comment: {comment}</p>
-          ))}
-        </div>
-      </div>
-    )}
+    
 
     {/* Footer Section */}
-    <div
-  className="text-xl text-black-500 text-sm cursor-pointer hover:text-blue-600"
-  onClick={() => {
-    const updated = [...expressions];
-    updated[index].showComment = !updated[index].showComment;
-    setExpressions(updated);
-  }}
->
-  💬 <span className="text-xs text-gray-500">
-    comment
-    {expression.comments && expression.comments.length > 0 && (
-      <> ({expression.comments.length})</>
-    )}
-  </span>
-</div>
+ 
     <div className="absolute bottom-2 right-4 text-xs text-gray-500">
       {new Date().toLocaleDateString()} {new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
     </div>
@@ -307,32 +270,29 @@ const HomePage = () => {
       <div className="container max-w-7xl px-4">
         {/* Header */}
         <div className="text-center mb-12">
-          <h1 className="text-2xl font-semibold text-blue-600 mb-5 -mt-3">
+          <h1 className="text-2xl font-semibold text-blue-600 mb-5 ">
             Categories
           </h1>
           <div className="flex justify-center gap-8">
             <div className="bg-white p-6 rounded-lg shadow-lg w-1/3 text-center">
               <div className="text-4xl mb-4">🎓</div>
               <h2 className="text-xl font-semibold">ACADEMIC</h2>
-              <p className="text-sm text-gray-600 mt-2">
-                Educational activities and learning exercises designed to build
-                foundational academic skills through interactive gameplay.
+              <p className="text-lg text-gray-800 mt-2">
+                Learn basic school stuff in fun ways!
               </p>
             </div>
             <div className="bg-white p-6 rounded-lg shadow-lg w-1/3 text-center">
               <div className="text-4xl mb-4">👨‍👩‍👧‍👦</div>
-              <h2 className="text-xl font-semibold">SOCIAL/Daily LIFE SKILL</h2>
-              <p className="text-sm text-gray-600 mt-2">
-                Social interaction scenarios and communication practice to
-                develop interpersonal skills and emotional understanding.
+              <h2 className="text-xl font-semibold">SOCIAL/DAILY LIFE SKILL</h2>
+              <p className="text-lg text-gray-800 mt-2">
+                Practice talking, sharing, and feelings.
               </p>
             </div>
             <div className="bg-white p-6 rounded-lg shadow-lg w-1/3 text-center">
               <div className="text-4xl mb-4">✏️</div>
               <h2 className="text-xl font-semibold">OBJECTS</h2>
-              <p className="text-sm text-gray-600 mt-2">
-                Object recognition and manipulation activities to enhance fine
-                motor skills and practical daily living abilities.
+              <p className="text-lg text-gray-800 mt-2">
+                Play with shapes and things we use every day.
               </p>
             </div>
           </div>
@@ -344,33 +304,30 @@ const HomePage = () => {
           <div className="flex justify-center gap-8">
             <div className="bg-white p-6 rounded-lg shadow-lg w-1/3 text-center">
               <div className="text-4xl text-green-500 mb-4">✔️</div>
-              <h2 className="text-xl font-semibold">Easy</h2>
-              <p className="text-sm text-gray-600 mt-2">
-                Simple tasks perfect for beginners, focusing on basic
-                recognition and fundamental skill development.
+              <h2 className="text-xl font-semibold">EASY</h2>
+              <p className="text-lg text-gray-800 mt-2">
+                Start here. Simple and fun!
               </p>
             </div>
             <div className="bg-white p-6 rounded-lg shadow-lg w-1/3 text-center">
               <div className="text-4xl text-yellow-500 mb-4">⭐</div>
-              <h2 className="text-xl font-semibold">Medium</h2>
-              <p className="text-sm text-gray-600 mt-2">
-                Intermediate challenges that build upon basic skills with more
-                complex scenarios and multi-step processes.
+              <h2 className="text-xl font-semibold">MEDIUM</h2>
+              <p className="text-lg text-gray-800 mt-2">
+                A little harder. Let’s level up!
               </p>
             </div>
             <div className="bg-white p-6 rounded-lg shadow-lg w-1/3 text-center">
               <div className="text-4xl text-red-500 mb-4">❗</div>
-              <h2 className="text-xl font-semibold">Hard</h2>
-              <p className="text-sm text-gray-600 mt-2">
-                Advanced activities for experienced learners, featuring complex
-                problem-solving and real-world applications.
+              <h2 className="text-xl font-semibold">HARD</h2>
+              <p className="text-lg text-gray-800 mt-2">
+                Ready for a challenge? Let’s go big!
               </p>
             </div>
           </div>
         </div>
 
         {/* Footer */}
-        <div className="text-center mt-12">
+        <div className="text-center">
       
           <div className="mt-4">
             <button onClick={studentPageRoute} className="bg-blue-600 text-white py-2 px-4 rounded-lg text-lg cursor-pointer hover:bg-blue-700">
