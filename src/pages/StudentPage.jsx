@@ -47,7 +47,7 @@ const StudentPage = () => {
 
       {/* Main Content */}
       {/* <main className="flex "> */}
-      <div className="container mx-auto p-6 flex flex-col gap-8">
+      <div className="container mx-auto p-6 -ml-0 flex flex-col gap-10">
         {/* Left Column: Streak */}
         <div className="bg-white p-6 rounded-lg shadow-lg flex flex-col justify-between w-95">
         <div flex flex-rows-2>
@@ -55,11 +55,11 @@ const StudentPage = () => {
           <h1 className="text-[32px] font-semibold mt-1">Chris!</h1>
           </div>
           <p className="mt-2 text-gray-600">
-            This is all your rewards and achievements! You’ve been doing amazing work learning new skills and completing activities. Each badge represents your dedication and progress on your learning journey.
+            This is all your rewards and achievements! 
           </p>
         </div>
 
-        <div className="bg-white p-6 rounded-lg shadow-lg flex flex-col justify-between w-95">
+        <div className="bg-white p-6 rounded-lg shadow-lg flex flex-col justify-between w-95 -mt-6">
            <div className="flex flex-rows-2">
             <span className="font-bold leading-tight  text-[46px] w-50">4th day Streak!</span>
             <img
@@ -74,15 +74,15 @@ const StudentPage = () => {
         </div>
 
         {/* Right Column: Badges */}
-        <div className="bg-white p-6 rounded-lg shadow-lg w-265 ml-111 mt-[-522px] ">
-          <div className="flex flex-rows-2 gap-135 ml-3">
+        <div className="bg-white p-6 rounded-lg shadow-lg w-265 ml-111 mt-[-403px] ">
+          <div className="flex flex-rows-2 gap-135 ml-3 -mb-2">
           <div>
             <h2 className="text-2xl font-bold text-sky-700">Badges</h2>
-             <p className="mt-2 text-gray-600">Perform Activities to Collect Badges!</p>
+             <p className="mt-1 text-gray-600">Perform Activities to Collect Badges!</p>
           </div>
           <div>
 
-          <button onClick={ChooseCategory} className="mt-6 w-50 bg-sky-700 text-white cursor-pointer hover:bg-sky-800 py-2 rounded-full">Collect Badges!</button>
+          <button onClick={ChooseCategory} className="mt-2 w-50 bg-sky-700 text-white cursor-pointer hover:bg-sky-800 py-2 rounded-full">Collect Badges!</button>
           </div>
           </div>
         
