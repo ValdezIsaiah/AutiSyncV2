@@ -80,7 +80,7 @@ export default function StudentProfile() {
 
               {/* Information Sections */}
               <div className="mt-4 space-y-3">
-                <div className="bg-gray-200 rounded-lg py-2 px-4">
+                <div className="bg-gray-200 rounded-xl py-2 px-4">
                   <p className="text-xs text-gray-600">Username</p>
                   {isEditing ? (
                     <input
