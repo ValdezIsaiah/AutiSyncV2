@@ -5,15 +5,15 @@ import { useNavigate } from 'react-router-dom';
 
 const Emotions = [
   { name: "Happy", image: "src/assets/happy.jpg" },
-  { name: "Sad", image: "src/assets/sad.jpg" },
-  { name: "Angry", image: "src/assets/angry.jpg" },
+  { name: "Sad", image: "src/assets/sad.webp" },
+  { name: "Angry", image: "src/assets/angry.png" },
   { name: "Excited", image: "src/assets/excited.jpg" },
-  { name: "Hungry", image: "src/assets/hungry.jpg" },
-  { name: "Disappointed", image: "src/assets/disappointed.jpg" },
-  { name: "Curious", image: "src/assets/curious.jpg" },
-  { name: "Loved", image: "src/assets/loved.jpg" },
   { name: "Calm", image: "src/assets/calm.jpg" },
-  { name: "Shy", image: "src/assets/shy.jpg" },
+  // { name: "Hungry", image: "src/assets/hungry.jpg" },
+  // { name: "Disappointed", image: "src/assets/disappointed.jpg" },
+  // { name: "Curious", image: "src/assets/curious.jpg" },
+  // { name: "Loved", image: "src/assets/loved.jpg" },
+  // { name: "Shy", image: "src/assets/shy.jpg" },
 ];
 
 const expressions = [
@@ -54,20 +54,22 @@ const HomePage = () => {
   const [showModal, setShowModal] = useState(false);
   const [selectedLevel, setSelectedLevel] = useState(3); // Default level set to 3
   const [name, setName] = useState("");
-  const [description, setDescription] = useState("");
+ 
+ // Assuming the username is dynamically set (can be from state/context)
+  const username = "SampleUser"; // Replace with dynamic username
 
   // const [expressions, setExpressions] = useState([]);    
   // newnewnew
 
   const [expressions, setExpressions] = useState([
     { emotion: "Happy", description: "Feeling Happy at level 5", image: "src/assets/happy.jpg" },
-    { emotion: "Sad", description: "Feeling Sad at level 2", image: "src/assets/sad.jpg" },
-    { emotion: "Angry", description: "Feeling Angry at level 4", image: "src/assets/angry.jpg" },
-    { emotion: "Curious", description: "Feeling Curious at level 1", image: "src/assets/curious.jpg" },
+    { emotion: "Sad", description: "Feeling Sad at level 2", image: "src/assets/sad.webp" },
+    { emotion: "Angry", description: "Feeling Angry at level 4", image: "src/assets/angry.png" },
+    { emotion: "Excited", description: "Feeling Curious at level 1", image: "src/assets/excited.jpg" },
     { emotion: "Calm", description: "Listening to rain sounds while working.", image: "src/assets/calm.jpg" },
     { emotion: "Excited", description: "Going to see my favorite band tonight!", image: "src/assets/excited.jpg" },
-    { emotion: "Curious", description: "Wondering what it feels to be a dog.", image: "src/assets/curious.jpg" },
-    { emotion: "Sad", description: "I lost my fish!", image: "src/assets/sad.jpg" },
+    { emotion: "Happy", description: "Wondering what it feels to be a dog.", image: "src/assets/happy.jpg" },
+    { emotion: "Sad", description: "I lost my fish!", image: "src/assets/sad.webp" },
   ]);
   
 
@@ -144,7 +146,7 @@ const getSliderBackground = () => {
           <h2 className="text-2xl font-semibold mb-1">Video Tutorial</h2>
           <p className="text-base mb-3">Empowering daily life skills for everyone.</p>
           <video
-          className="w-full rounded-lg h-75 shadow-lg"
+          className="w-full rounded-lg h-80 shadow-lg"
           controls
           autoPlay  
           loop
@@ -157,9 +159,9 @@ const getSliderBackground = () => {
       </section>
 
       {/* Emotion Selection Section */}
-      <section id="emotion-selection" className="my-12 px-6 text-center">
-        <div className="max-w-7xl mx-auto">
-          <h2 className="text-2xl font-semibold mb-5">How are you feeling today?</h2>
+      <section  className="my-12 px-6 text-center">
+        <div id="emotion-selection" className="max-w-7xl mx-auto">
+          <h2 className="text-2xl font-semibold mb-7">How are you feeling today?</h2>
           <div className="grid grid-cols-5 gap-8">
             {Emotions.map((emotion, index) => (
               <button
@@ -170,7 +172,7 @@ const getSliderBackground = () => {
                 <img
                   src={emotion.image}
                   alt={emotion.name}
-                  className="h-14 w-18 rounded-full mx-auto mb-2"
+                  className="h-18 w-18 rounded-full mx-auto mb-2"
                 />
                 <span className="block">{emotion.name}</span>
               </button>
@@ -250,7 +252,8 @@ const getSliderBackground = () => {
     />
     <h3 className="font-bold text-lg text-center">{expression.emotion}</h3>
     <p className="text-lg text-gray-700 mb-1">{expression.description}</p>
-    <p className="text-xs text-gray-500 italic mb-4 mt-1">Posted by {expression.name || "Anonymous"}</p>
+<p className="text-xs text-gray-500 italic mb-4 mt-1">Posted by {expression.name || "Anonymous"}</p>
+
 
     
 
