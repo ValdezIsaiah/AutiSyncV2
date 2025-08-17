@@ -1,13 +1,20 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useChat } from '../components/ChatContext';
 
 const ChooseCategory = () => {
   const [showModal, setShowModal] = useState(false);  // To manage modal visibility
-  const [roomNumber, setRoomNumber] = useState('');   // To store the room number input
+  
   const navigate = useNavigate();
-  const [showChatBar, setShowChatBar] = useState(false);
-  const [chatMessages, setChatMessages] = useState([]);
-const [messageInput, setMessageInput] = useState('');
+
+  const {
+  showChatBar, setShowChatBar,
+  roomNumber, setRoomNumber,
+  chatMessages, setChatMessages,
+  messageInput, setMessageInput,
+  handleSendMessage
+} = useChat();
+
 
   // Function to handle "Join a Friend" button click
   const handleJoinFriendClick = () => {
@@ -33,35 +40,40 @@ const [messageInput, setMessageInput] = useState('');
   // Function to handle category click
   const handleCategoryClick = (e) => {
     e.preventDefault(); // Prevent default form submission behavior
-    navigate("/choosedifficulty"); // Redirect to the ChooseDifficulty route
+    navigate("/choosedifficulty", {
+      state: {
+      showChatBar: showChatBar,
+      roomNumber: roomNumber
+      }
+  }); // Redirect to the ChooseDifficulty route
   };
 
   const goToProfile = () => {
     navigate('/studentprofile');
   };
 
-  const handleSendMessage = () => {
-    if (messageInput.trim() !== '') {
-      const newMessage = {
-        id: Date.now(),
-        text: messageInput,
-        sender: 'you', // You can toggle 'friend' for testing
-      };
+  // const handleSendMessage = () => {
+  //   if (messageInput.trim() !== '') {
+  //     const newMessage = {
+  //       id: Date.now(),
+  //       text: messageInput,
+  //       sender: 'you', // You can toggle 'friend' for testing
+  //     };
   
-      setChatMessages([...chatMessages, newMessage]);
-      setMessageInput('');
+  //     setChatMessages([...chatMessages, newMessage]);
+  //     setMessageInput('');
   
-      // Simulate a friend's reply after 1.5 seconds
-      setTimeout(() => {
-        const reply = {
-          id: Date.now() + 1,
-          text: 'Hi there! 👋',
-          sender: 'friend',
-        };
-        setChatMessages((prev) => [...prev, reply]);
-      }, 1500);
-    }
-  };
+  //     // Simulate a friend's reply after 1.5 seconds
+  //     setTimeout(() => {
+  //       const reply = {
+  //         id: Date.now() + 1,
+  //         text: 'Hi there! 👋',
+  //         sender: 'friend',
+  //       };
+  //       setChatMessages((prev) => [...prev, reply]);
+  //     }, 1500);
+  //   }
+  // };
 
   return (
     <div className="bg-gray-100 min-h-screen">
@@ -152,7 +164,7 @@ const [messageInput, setMessageInput] = useState('');
           {/* Category buttons */}
           <button 
             className="bg-blue-100 cursor-pointer rounded-lg shadow-md hover:bg-blue-200 w-130 h-43" 
-            onClick={handleCategoryClick}
+            onClick={(e) => handleCategoryClick(e, "Academic")}
           >
             <div className="text-center">
               <div className="text-5xl mb-2">🎓</div>
@@ -168,15 +180,7 @@ const [messageInput, setMessageInput] = useState('');
               <div className="font-semibold text-2xl">Social / Daily Life Skill</div>
             </div>
           </button>
-          <button 
-            className="bg-blue-100 py-4 cursor-pointer rounded-lg shadow-md hover:bg-blue-200 w-130 h-43" 
-            onClick={() => handleCategoryClick('Object')}
-          >
-            <div className="text-center">
-              <div className="text-5xl mb-2">✏️</div>
-              <div className="font-semibold text-2xl">Object</div>
-            </div>
-          </button>
+         
         </div>
 
       </main>

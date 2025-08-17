@@ -1,7 +1,7 @@
 import React from 'react';
 import { CheckCircleIcon } from '@heroicons/react/24/solid';
 import { useNavigate } from 'react-router-dom';
-import AdminProfile from './AdminProfile';
+// import AdminProfile from './Admin/AdminProfile.jsx';
 
 const Tracking = () => {
   const metrics = [
@@ -143,10 +143,10 @@ const Tracking = () => {
         <div className="w-ful mx-auto flex justify-between  px-8">
         <h2 className="text-white text-2xl  font-bold">AutiSync</h2>
           <nav className="flex text-lg space-x-8 ml-auto mr-6">
-            <a href="#" className="text-white hover:text-gray-300">Home</a>
+            
             <a href="/tracking" className="text-white hover:text-gray-300">Tracking</a>
             <a href="/activities" className="text-white hover:text-gray-300">Activities</a>
-            <a href="/expressionwall"  className="text-white hover:text-gray-300">Expression Wall</a>
+            <a href="/alarmingemotions" className="text-white hover:text-gray-300">Alarming Emotions</a>
           </nav>
           <div className="flex items-center">
             <img onClick={AdminProfile}

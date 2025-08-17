@@ -4,48 +4,43 @@ import { useNavigate } from 'react-router-dom';
 
 
 const Emotions = [
-  { name: "Happy", image: "src/assets/happy.jpg" },
-  { name: "Sad", image: "src/assets/sad.webp" },
+  { name: "Happy", image: "src/assets/happy.png" },
+  { name: "Sad", image: "src/assets/sad.png" },
   { name: "Angry", image: "src/assets/angry.png" },
-  { name: "Excited", image: "src/assets/excited.jpg" },
-  { name: "Calm", image: "src/assets/calm.jpg" },
-  // { name: "Hungry", image: "src/assets/hungry.jpg" },
-  // { name: "Disappointed", image: "src/assets/disappointed.jpg" },
-  // { name: "Curious", image: "src/assets/curious.jpg" },
-  // { name: "Loved", image: "src/assets/loved.jpg" },
-  // { name: "Shy", image: "src/assets/shy.jpg" },
+  { name: "Excited", image: "src/assets/excited.png" },
+  { name: "Calm", image: "src/assets/calm.png" },
 ];
 
 const expressions = [
   {
     emotion: "Happy",
     description: "Just finished a great book and feeling accomplished!",
-    image: "src/assets/happy.jpg" // Replace with the actual image path
+    image: "src/assets/happy.png" // Replace with the actual image path
   },
   {
     emotion: "Sad",
     description: "Just finished a great book and feeling accomplished!",
-    image: "src/assets/sad.jpg" // Replace with the actual image path
+    image: "src/assets/sad.png" // Replace with the actual image path
   },
   {
     emotion: "Angry",
     description: "Just finished a great book and feeling accomplished!",
-    image: "src/assets/angry.jpg" // Replace with the actual image path
+    image: "src/assets/angry.png" // Replace with the actual image path
   },
   {
     emotion: "Curious",
     description: "Wondering about how clouds form in the sky.",
-    image: "src/assets/curious.jpg" // Replace with the actual image path
+    image: "src/assets/curious.png" // Replace with the actual image path
   },
   {
     emotion: "Calm",
     description: "Listening to rain sounds while working.",
-    image: "src/assets/calm.jpg" // Replace with the actual image path
+    image: "src/assets/calm.png" // Replace with the actual image path
   },
   {
     emotion: "Excited",
     description: "Going to see my favorite band tonight!",
-    image: "src/assets/excited.jpg" // Replace with the actual image path
+    image: "src/assets/excited.png" // Replace with the actual image path
   },
 ];
 
@@ -62,14 +57,14 @@ const HomePage = () => {
   // newnewnew
 
   const [expressions, setExpressions] = useState([
-    { emotion: "Happy", description: "Feeling Happy at level 5", image: "src/assets/happy.jpg" },
-    { emotion: "Sad", description: "Feeling Sad at level 2", image: "src/assets/sad.webp" },
+    { emotion: "Happy", description: "Feeling Happy at level 5", image: "src/assets/happy.png" },
+    { emotion: "Sad", description: "Feeling Sad at level 2", image: "src/assets/sad.png" },
     { emotion: "Angry", description: "Feeling Angry at level 4", image: "src/assets/angry.png" },
-    { emotion: "Excited", description: "Feeling Curious at level 1", image: "src/assets/excited.jpg" },
-    { emotion: "Calm", description: "Listening to rain sounds while working.", image: "src/assets/calm.jpg" },
-    { emotion: "Excited", description: "Going to see my favorite band tonight!", image: "src/assets/excited.jpg" },
-    { emotion: "Happy", description: "Wondering what it feels to be a dog.", image: "src/assets/happy.jpg" },
-    { emotion: "Sad", description: "I lost my fish!", image: "src/assets/sad.webp" },
+    { emotion: "Excited", description: "Feeling Curious at level 1", image: "src/assets/excited.png" },
+    { emotion: "Calm", description: "Listening to rain sounds while working.", image: "src/assets/calm.png" },
+    { emotion: "Excited", description: "Going to see my favorite band tonight!", image: "src/assets/excited.png" },
+    { emotion: "Happy", description: "Wondering what it feels to be a dog.", image: "src/assets/happy.png" },
+    { emotion: "Sad", description: "I lost my fish!", image: "src/assets/sad.png" },
   ]);
   
 
@@ -152,7 +147,7 @@ const getSliderBackground = () => {
           loop
           muted
         >
-          <source src="/public/assets/assets/videotutorial.mp4" type="video/mp4" />
+          <source src="/src/assets/videotutorial.mp4" type="video/mp4" />
           Your browser does not support the video tag.
         </video>
         </div>

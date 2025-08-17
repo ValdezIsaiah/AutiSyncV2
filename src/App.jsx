@@ -20,8 +20,9 @@ import ActivitiesPage from './Admin/Activities';
 import AddActivity from './Admin/AddActivity';
 import ExpressionWall from './Admin/ExpressionWall';
 import Tracking from './Admin/Tracking';
-import AdminProfile from './Admin/AdminProfile';
-import Notifications from './Admin/Notifications';
+import AdminProfile from './Admin/AdminProfile.jsx';
+import AlarmingEmotions from './Admin/AlarmingEmotions.jsx';
+// import Notifications from './Admin/Notifications';
 
 function App() {
   return (
@@ -44,7 +45,7 @@ function App() {
         <Route path="/expressionwall" element={<ExpressionWall />} />
         <Route path="/tracking" element={<Tracking />} />
         <Route path="/adminprofile" element={<AdminProfile />} />
-        <Route path="/notifications" element={<Notifications />} />
+        <Route path="/alarmingemotions" element={<AlarmingEmotions />} />
       </Routes>
     </ChatProvider>
   );

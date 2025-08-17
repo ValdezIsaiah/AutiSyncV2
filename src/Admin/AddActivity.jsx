@@ -207,7 +207,7 @@ const AddActivity = () => {
         </div>
       ))}
     </div>
-        <div className="flex flex justify-end space-x-6 mt-8"> 
+        <div className="flex justify-end space-x-6 mt-8"> 
           <button className="bg-red-800 text-white px-2 py-1 rounded-xs cursor-pointer">
             Cancel
           </button>          
