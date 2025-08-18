@@ -5,13 +5,9 @@ const StudentPage = () => {
 
     const navigate = useNavigate();
 
-    const handleHomeClick = () => {
-      navigate('/home');
-    };
-
-    const ChooseCategory = (e) => {
+    const flashcardspage = (e) => {
       e.preventDefault(); // Prevent default form submission behavior
-      navigate("/choosecategory"); // Redirect to the LoginPage route
+      navigate("/flashcardspage"); // Redirect to the LoginPage route
     };
 
     const goToProfile = () => {
@@ -24,9 +20,9 @@ const StudentPage = () => {
         <div className="w-ful mx-auto flex justify-between  px-8">
         <h2 className="text-white text-2xl  font-bold">AutiSync</h2>
           <nav className="flex text-lg space-x-6 ml-auto mr-6">
-            <a href="/home" className="text-white hover:text-gray-300">Home</a>
-            <a href="/choosecategory" className="text-white hover:text-gray-300">Activity</a>
-            <a href="#emotion-selection" className="text-white hover:text-gray-300">Expression</a>
+            <a href="/studentpage" className="text-white hover:text-gray-300">Home</a>
+            <a href="/flashcardspage" className="text-white hover:text-gray-300">Activity</a>
+            <a href="/home" className="text-white hover:text-gray-300">Expression</a>
           </nav>
           <div className="flex items-center cursor-pointer">
             <img onClick={goToProfile}
@@ -55,7 +51,7 @@ const StudentPage = () => {
           <h1 className="text-[32px] font-semibold mt-1">Chris!</h1>
           </div>
           <p className="mt-2 text-gray-600">
-            This is all your rewards and achievements! 
+            These are all your rewards and achievements! 
           </p>
         </div>
 
@@ -82,7 +78,7 @@ const StudentPage = () => {
           </div>
           <div>
 
-          <button onClick={ChooseCategory} className="mt-2 w-50 bg-sky-700 text-white cursor-pointer hover:bg-sky-800 py-2 rounded-full">Collect Badges!</button>
+          <button onClick={flashcardspage} className="mt-2 w-50 bg-sky-600 text-white cursor-pointer hover:bg-sky-700 py-2 rounded-full">Collect Badges!</button>
           </div>
           </div>
         

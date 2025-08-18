@@ -5,7 +5,7 @@ const activities = [
   { id: 2, name: "Numbers" },
   { id: 3, name: "Colors" },
   { id: 4, name: "Shapes" },
-  { id: 5, name: "Daily Life Skills" },
+  { id: 5, name: "Spelling" },
 ];
 
 const ActivitySelectorModal = ({ isOpen, onClose, onSelect }) => {

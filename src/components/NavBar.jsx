@@ -23,8 +23,8 @@ const NavBar = ({ onProfileClick }) => {
         <h2 className="text-white text-2xl font-bold">AutiSync</h2>
         <nav className="flex text-lg space-x-6 ml-auto mr-6">
           <a href="/studentpage" className="text-white hover:text-gray-300">Home</a>
-          <a href="/choosecategory" className="text-white hover:text-gray-300">Activity</a>
-          <a href="#" onClick={handleExpressionClick} className="text-white hover:text-gray-300">Expression</a>
+          <a href="/flashcardspage" className="text-white hover:text-gray-300">Activity</a>
+          <a onClick={handleExpressionClick} className="text-white hover:text-gray-300">Expression</a>
         </nav>
         <div onClick={handleProfileClick} className="flex items-center cursor-pointer">
           <img 

@@ -122,7 +122,7 @@ const getSliderBackground = () => {
         <h2 className="text-white text-2xl  font-bold">AutiSync</h2>
           <nav className="flex text-lg space-x-8 ml-auto mr-6">
             <a href="/studentpage" className="text-white hover:text-gray-300">Home</a>
-            <a href="/choosecategory" className="text-white hover:text-gray-300">Activity</a>
+            <a href="/flashcardspage" className="text-white hover:text-gray-300">Activity</a>
             <a href="#emotion-selection" className="text-white hover:text-gray-300">Expression</a>
           </nav>
           <div onClick={studentProfileRoute} className="flex items-center cursor-pointer">
@@ -267,11 +267,11 @@ const getSliderBackground = () => {
 <div id="activity-selection" className="bg-gray-100 min-h-screen flex flex-col items-center justify-center py-6">
       <div className="container max-w-7xl px-4">
         {/* Header */}
-        <div className="text-center mb-12">
+        <div className="text-center mb-14">
           <h1 className="text-2xl font-semibold text-blue-600 mb-5 ">
             Categories
           </h1>
-          <div className="flex justify-center gap-8">
+          <div className="flex justify-center gap-13">
             <div className="bg-white p-6 rounded-lg shadow-lg w-1/3 text-center">
               <div className="text-4xl mb-4">🎓</div>
               <h2 className="text-xl font-semibold">ACADEMIC</h2>
@@ -286,13 +286,13 @@ const getSliderBackground = () => {
                 Practice talking, sharing, and feelings.
               </p>
             </div>
-            <div className="bg-white p-6 rounded-lg shadow-lg w-1/3 text-center">
+            {/* <div className="bg-white p-6 rounded-lg shadow-lg w-1/3 text-center">
               <div className="text-4xl mb-4">✏️</div>
               <h2 className="text-xl font-semibold">OBJECTS</h2>
               <p className="text-lg text-gray-800 mt-2">
                 Play with shapes and things we use every day.
               </p>
-            </div>
+            </div> */}
           </div>
         </div>
 

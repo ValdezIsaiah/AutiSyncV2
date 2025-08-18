@@ -10,10 +10,12 @@ import LandingPage from './pages/LandingPage';
 import HomePage from './pages/Homepage';
 import SignupPage from './pages/SignupPage';
 import StudentPage from './pages/StudentPage';
-import ChooseCategory from './pages/ChooseCategory';
-import ChooseDifficulty from './pages/ChooseDifficulty';
+// import ChooseCategory from './pages/ChooseCategory';
+// import ChooseDifficulty from './pages/ChooseDifficulty';
 import StudentProfile from './pages/StudentProfile';
-import EasyAcademicFlashcard from './pages/AcademicFlashcard/EasyAcademicFlashcard';
+// import EasyAcademicFlashcard from './pages/AcademicFlashcard/EasyAcademicFlashcard';
+import FlashcardsPage from './pages/FlashcardsPage';
+
 
 // Admin pages
 import ActivitiesPage from './Admin/Activities';
@@ -34,10 +36,13 @@ function App() {
         <Route path="/" element={<LandingPage />} />
         <Route path="/signuppage" element={<SignupPage />} />
         <Route path="/studentpage" element={<StudentPage />} />
-        <Route path="/choosecategory" element={<ChooseCategory />} />
-        <Route path="/choosedifficulty" element={<ChooseDifficulty />} />
+        {/* <Route path="/choosecategory" element={<ChooseCategory />} />
+        <Route path="/choosedifficulty" element={<ChooseDifficulty />} /> */}
         <Route path="/studentprofile" element={<StudentProfile />} />
-        <Route path="/easyacademicflashcard" element={<EasyAcademicFlashcard />} />
+        {/* <Route path="/easyacademicflashcard" element={<EasyAcademicFlashcard />} /> */}
+        {/* <Route path="/flashcardspage" element={<FlashcardsPage />} /> */}
+        <Route path="/flashcardspage" element={<FlashcardsPage />} />
+
 
         {/* Admin Pages */}
         <Route path="/activities" element={<ActivitiesPage />} />
