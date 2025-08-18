@@ -3,6 +3,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { useChat } from '../components/ChatContext';
 import ActivitySelectorModal from "../components/ActivitySelectorModal";
 import NavBar from '../components/NavBar';
+import ChatBar from '../components/ChatBar';
 
 const ChooseDifficulty = () => {
   const navigate = useNavigate();
@@ -12,76 +13,36 @@ const ChooseDifficulty = () => {
   const [selectedActivity, setSelectedActivity] = useState(null);
   const [showModal, setShowModal] = useState(false);
 
-  const {
-    showChatBar, setShowChatBar,
-    roomNumber, setRoomNumber,
-    chatMessages, setChatMessages,
-    messageInput, setMessageInput,
-    handleSendMessage
-  } = useChat();
+  const { showChatBar, roomNumber } = useChat();
 
-
-  // ✅ When selecting difficulty, open modal
+  // When selecting difficulty, open modal
   const handleDifficultySelect = (level) => {
     setDifficulty(level);
     setShowModal(true);
   };
 
-  // ✅ After choosing activity, navigate to flashcards page
+  // After choosing activity, navigate to flashcards page
   const handleActivitySelect = (activity) => {
     setSelectedActivity(activity);
     setShowModal(false);
 
-    // Navigate with state
     navigate("/easyacademicflashcard", {
       state: {
         difficulty: difficulty,
         activity: activity,
-        showChatBar: location.state?.showChatBar || false,
-        roomNumber: location.state?.roomNumber || ''
+        showChatBar: location.state?.showChatBar ?? showChatBar,
+        roomNumber: location.state?.roomNumber ?? roomNumber
       }
     });
   };
 
   return (
     <div className="bg-gray-100 min-h-screen">
-
       {/* Use NavBar component */}
       <NavBar />
-      
-      {/* Chat Bar */}
-      {showChatBar && (
-        <aside className="bg-blue-100 shadow-lg w-64 h-[calc(100vh-56px)] fixed top-[56px] left-0 z-40 p-4 flex flex-col">
-          <h3 className="text-xl font-bold text-blue-800">Chat Room</h3>
-          <p className="text-sm text-gray-700">🟢 Room: <strong>{roomNumber}</strong></p>
-          <div className="flex-1 overflow-y-auto mb-2 space-y-2">
-            {chatMessages.map((msg) => (
-              <div
-                key={msg.id}
-                className={`p-2 rounded text-sm max-w-[90%] ${
-                  msg.sender === 'you' ? 'bg-blue-200 self-end text-right' : 'bg-white self-start text-left'
-                }`}
-              >
-                {msg.text}
-              </div>
-            ))}
-          </div>
-          <textarea
-            value={messageInput}
-            onChange={(e) => setMessageInput(e.target.value)}
-            placeholder="Type a message..."
-            className="w-full p-2 border rounded resize-none h-16 text-sm"
-          />
-          <button
-            onClick={handleSendMessage}
-            className="bg-blue-600 text-white w-full py-2 mt-1 rounded hover:bg-blue-700 text-sm"
-          >
-            Send
-          </button>
-        </aside>
-      )}
 
-    
+      {/* Use ChatBar component */}
+      <ChatBar />
 
       {/* Main content */}
       <main className="max-w-screen-lg mx-auto py-10 px-4 text-center">
@@ -127,7 +88,6 @@ const ChooseDifficulty = () => {
           </button>
         </div>
 
-        {/* ✅ Activity Selector Modal */}
         <ActivitySelectorModal
           isOpen={showModal}
           onClose={() => setShowModal(false)}
