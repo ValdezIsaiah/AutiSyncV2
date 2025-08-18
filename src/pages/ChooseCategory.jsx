@@ -1,19 +1,19 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useChat } from '../components/ChatContext';
+import NavBar from '../components/NavBar';
 
 const ChooseCategory = () => {
-  const [showModal, setShowModal] = useState(false);  // To manage modal visibility
-  
+  const [showModal, setShowModal] = useState(false);
   const navigate = useNavigate();
 
   const {
-  showChatBar, setShowChatBar,
-  roomNumber, setRoomNumber,
-  chatMessages, setChatMessages,
-  messageInput, setMessageInput,
-  handleSendMessage
-} = useChat();
+    showChatBar, setShowChatBar,
+    roomNumber, setRoomNumber,
+    chatMessages, setChatMessages,
+    messageInput, setMessageInput,
+    handleSendMessage
+  } = useChat();
 
 
   // Function to handle "Join a Friend" button click
@@ -52,50 +52,10 @@ const ChooseCategory = () => {
     navigate('/studentprofile');
   };
 
-  // const handleSendMessage = () => {
-  //   if (messageInput.trim() !== '') {
-  //     const newMessage = {
-  //       id: Date.now(),
-  //       text: messageInput,
-  //       sender: 'you', // You can toggle 'friend' for testing
-  //     };
-  
-  //     setChatMessages([...chatMessages, newMessage]);
-  //     setMessageInput('');
-  
-  //     // Simulate a friend's reply after 1.5 seconds
-  //     setTimeout(() => {
-  //       const reply = {
-  //         id: Date.now() + 1,
-  //         text: 'Hi there! 👋',
-  //         sender: 'friend',
-  //       };
-  //       setChatMessages((prev) => [...prev, reply]);
-  //     }, 1500);
-  //   }
-  // };
-
   return (
     <div className="bg-gray-100 min-h-screen">
-      {/* Header */}
-      <header className="bg-blue-500 text-white py-3">
-        <div className="w-ful mx-auto flex justify-between  px-8">
-        <h2 className="text-white text-2xl  font-bold">AutiSync</h2>
-          <nav className="flex text-lg space-x-6 ml-auto mr-6">
-            <a href="/studentpage" className="text-white hover:text-gray-300">Home</a>
-            <a href="#activity-selection" className="text-white hover:text-gray-300">Activity</a>
-            <a href="#emotion-selection" className="text-white hover:text-gray-300">Expression</a>
-          </nav>
-          <div className="flex items-center">
-            <img onClick={goToProfile}
-              src="/src/assets/kidprofile1.jpg" // Replace with the profile image URL
-              alt="Profile Icon"
-              className="h-8 w-8 rounded-full cursor-pointer transition duration-300"
-            />
-          </div>
-        </div>
-      </header>
-
+      {/* Use NavBar component */}
+      <NavBar onProfileClick={goToProfile} />
 
       {showChatBar && (
   <aside className="bg-blue-100 shadow-lg w-64 h-[calc(100vh-56px)] fixed top-[56px] left-0 z-40 p-4 flex flex-col">

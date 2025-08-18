@@ -1,20 +1,20 @@
-import { useState, useEffect } from "react"; // Add useEffect
-import { useNavigate, useLocation } from "react-router-dom"; // Add useLocation
-import { useChat } from '../../components/ChatContext'; // Fix import path
+import { useState, useEffect } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
+import { useChat } from '../../components/ChatContext';
 import Confetti from "react-confetti";
+import NavBar from '../../components/NavBar';
 
 const EasyAcademicFlashcard = () => {
-
   const navigate = useNavigate();
   const location = useLocation();
 
   const {
-  showChatBar, setShowChatBar,
-  roomNumber, setRoomNumber,
-  chatMessages, setChatMessages,
-  messageInput, setMessageInput,
-  handleSendMessage
-} = useChat();
+    showChatBar, setShowChatBar,
+    roomNumber, setRoomNumber,
+    chatMessages, setChatMessages,
+    messageInput, setMessageInput,
+    handleSendMessage
+  } = useChat();
 
   
   useEffect(() => {
@@ -103,20 +103,8 @@ const EasyAcademicFlashcard = () => {
 
   return (
     <div className="bg-gray-200 font-sans min-h-screen relative">
-      {/* Navbar */}
-      <header className="bg-blue-500 text-white py-3">
-        <div className="w-full mx-auto flex justify-between px-8">
-          <h2 className="text-white text-2xl font-bold">AutiSync</h2>
-          <nav className="flex text-lg space-x-8 ml-auto mr-6">
-            <a href="/studentpage" className="text-white hover:text-gray-300">Home</a>
-            <a href="/choosecategory" className="text-white hover:text-gray-300">Activity</a>
-            <a href="#" onClick={handleExpressionClick} className="text-white hover:text-gray-300">Expression</a>
-          </nav>
-          <div onClick={studentProfileRoute} className="flex items-center cursor-pointer">
-            <img src="/src/assets/kidprofile1.jpg" alt="Profile Icon" className="h-8 w-8 rounded-full" />
-          </div>
-        </div>
-      </header>
+      {/* Use NavBar component */}
+      <NavBar onProfileClick={studentProfileRoute} />
 
       {/* Title */}
       <h2 className="text-blue-600 text-center pt-4 text-4xl -mt-2 font-bold mb-2">ACADEMIC</h2>

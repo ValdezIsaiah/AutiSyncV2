@@ -2,12 +2,12 @@ import React, { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useChat } from '../components/ChatContext';
 import ActivitySelectorModal from "../components/ActivitySelectorModal";
+import NavBar from '../components/NavBar';
 
 const ChooseDifficulty = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  // ✅ Local state for difficulty, activity, and modal
   const [difficulty, setDifficulty] = useState(null);
   const [selectedActivity, setSelectedActivity] = useState(null);
   const [showModal, setShowModal] = useState(false);
@@ -19,6 +19,7 @@ const ChooseDifficulty = () => {
     messageInput, setMessageInput,
     handleSendMessage
   } = useChat();
+
 
   // ✅ When selecting difficulty, open modal
   const handleDifficultySelect = (level) => {
@@ -44,6 +45,10 @@ const ChooseDifficulty = () => {
 
   return (
     <div className="bg-gray-100 min-h-screen">
+
+      {/* Use NavBar component */}
+      <NavBar />
+      
       {/* Chat Bar */}
       {showChatBar && (
         <aside className="bg-blue-100 shadow-lg w-64 h-[calc(100vh-56px)] fixed top-[56px] left-0 z-40 p-4 flex flex-col">
@@ -76,24 +81,7 @@ const ChooseDifficulty = () => {
         </aside>
       )}
 
-      {/* Header */}
-      <header className="bg-blue-500 text-white py-3">
-        <div className="w-ful mx-auto flex justify-between  px-8">
-          <h2 className="text-white text-2xl font-bold">AutiSync</h2>
-          <nav className="flex text-lg space-x-6 ml-auto mr-6">
-            <a href="/studentpage" className="text-white hover:text-gray-300">Home</a>
-            <a href="#activity-selection" className="text-white hover:text-gray-300">Activity</a>
-            <a href="#emotion-selection" className="text-white hover:text-gray-300">Expression</a>
-          </nav>
-          <div className="flex items-center">
-            <img
-              src="/src/assets/kidprofile1.jpg"
-              alt="Profile Icon"
-              className="h-8 w-8 rounded-full"
-            />
-          </div>
-        </div>
-      </header>
+    
 
       {/* Main content */}
       <main className="max-w-screen-lg mx-auto py-10 px-4 text-center">
