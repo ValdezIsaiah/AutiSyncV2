@@ -1,46 +1,49 @@
-  import React from 'react';
-  import { useNavigate, useLocation } from 'react-router-dom'; // Add this import
-  import { useChat } from '../components/ChatContext';
-
-
+import React, { useState } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { useChat } from '../components/ChatContext';
+import ActivitySelectorModal from "../components/ActivitySelectorModal";
 
 const ChooseDifficulty = () => {
-
-  const navigate = useNavigate(); // Add this line
+  const navigate = useNavigate();
   const location = useLocation();
 
+  // ✅ Local state for difficulty, activity, and modal
+  const [difficulty, setDifficulty] = useState(null);
+  const [selectedActivity, setSelectedActivity] = useState(null);
+  const [showModal, setShowModal] = useState(false);
+
   const {
-  showChatBar, setShowChatBar,
-  roomNumber, setRoomNumber,
-  chatMessages, setChatMessages,
-  messageInput, setMessageInput,
-  handleSendMessage
-} = useChat();
+    showChatBar, setShowChatBar,
+    roomNumber, setRoomNumber,
+    chatMessages, setChatMessages,
+    messageInput, setMessageInput,
+    handleSendMessage
+  } = useChat();
 
-  const handleCategoryClick = (category) => {
-    console.log(`Category clicked: ${category}`);
-    // Add your logic for category navigation or actions
+  // ✅ When selecting difficulty, open modal
+  const handleDifficultySelect = (level) => {
+    setDifficulty(level);
+    setShowModal(true);
   };
 
-  const handleJoinFriendClick = () => {
-    console.log("Join a Friend button clicked");
-    // Add your logic for the Join a Friend action
-  };
+  // ✅ After choosing activity, navigate to flashcards page
+  const handleActivitySelect = (activity) => {
+    setSelectedActivity(activity);
+    setShowModal(false);
 
-  // Function to handle category click
-  const handledifficultyClick = (e) => {
-  e.preventDefault();
-  navigate("/easyacademicflashcard", {
-     state: {
+    // Navigate with state
+    navigate("/easyacademicflashcard", {
+      state: {
+        difficulty: difficulty,
+        activity: activity,
         showChatBar: location.state?.showChatBar || false,
         roomNumber: location.state?.roomNumber || ''
-     }
-  });
-};
+      }
+    });
+  };
 
   return (
     <div className="bg-gray-100 min-h-screen">
-
       {/* Chat Bar */}
       {showChatBar && (
         <aside className="bg-blue-100 shadow-lg w-64 h-[calc(100vh-56px)] fixed top-[56px] left-0 z-40 p-4 flex flex-col">
@@ -72,10 +75,11 @@ const ChooseDifficulty = () => {
           </button>
         </aside>
       )}
+
       {/* Header */}
       <header className="bg-blue-500 text-white py-3">
         <div className="w-ful mx-auto flex justify-between  px-8">
-        <h2 className="text-white text-2xl  font-bold">AutiSync</h2>
+          <h2 className="text-white text-2xl font-bold">AutiSync</h2>
           <nav className="flex text-lg space-x-6 ml-auto mr-6">
             <a href="/studentpage" className="text-white hover:text-gray-300">Home</a>
             <a href="#activity-selection" className="text-white hover:text-gray-300">Activity</a>
@@ -83,7 +87,7 @@ const ChooseDifficulty = () => {
           </nav>
           <div className="flex items-center">
             <img
-              src="/src/assets/kidprofile1.jpg" // Replace with the profile image URL
+              src="/src/assets/kidprofile1.jpg"
               alt="Profile Icon"
               className="h-8 w-8 rounded-full"
             />
@@ -100,35 +104,33 @@ const ChooseDifficulty = () => {
             className="w-500 h-70 -my-5"
           />
         </div>
-        <div className="flex flex-rows-2 gap-145">
+
         <h2 className="text-3xl font-bold mt-3 mb-6">Choose Difficulty</h2>
 
-    
-        </div>
-
         <div className="flex flex-cols-3 gap-5 mb-6">
-          {/* Category buttons */}
           <button 
             className="bg-blue-100 cursor-pointer rounded-lg shadow-md hover:bg-blue-200 w-130 h-43" 
-            onClick={handledifficultyClick}
+            onClick={() => handleDifficultySelect("Easy")}
           >
             <div className="text-center">
               <div className="text-5xl mb-2">👌</div>
               <div className="font-semibold text-xl">Easy</div>
             </div>
           </button>
+
           <button 
             className="bg-blue-100 cursor-pointer py-4 rounded-lg shadow-md hover:bg-blue-200 w-130 h-43" 
-            onClick={() => handleCategoryClick('Social / Daily Life Skill')}
+            onClick={() => handleDifficultySelect("Medium")}
           >
             <div className="text-center">
               <div className="text-5xl mb-2">🫡</div>
               <div className="font-semibold text-xl">Medium</div>
             </div>
           </button>
+
           <button 
             className="bg-blue-100 py-4 cursor-pointer rounded-lg shadow-md hover:bg-blue-200 w-130 h-43" 
-            onClick={() => handleCategoryClick('Object')}
+            onClick={() => handleDifficultySelect("Hard")}
           >
             <div className="text-center">
               <div className="text-5xl mb-2">🫥</div>
@@ -137,6 +139,12 @@ const ChooseDifficulty = () => {
           </button>
         </div>
 
+        {/* ✅ Activity Selector Modal */}
+        <ActivitySelectorModal
+          isOpen={showModal}
+          onClose={() => setShowModal(false)}
+          onSelect={handleActivitySelect}
+        />
       </main>
     </div>
   );
