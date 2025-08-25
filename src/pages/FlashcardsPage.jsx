@@ -97,7 +97,7 @@ const FlashcardsPage = () => {
       <img 
         src="/src/assets/categoryheader.jpg" 
         alt="Main image" 
-        className="w-500 h-70 -my-5"
+        className="w-550 h-80 -my-5"
       />
     </div>
   )}

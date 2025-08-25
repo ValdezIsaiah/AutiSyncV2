@@ -32,7 +32,7 @@ const AlarmingEmotions = () => {
             
             <a href="/tracking" className="text-white hover:text-gray-300">Tracking</a>
             <a href="/activities" className="text-white hover:text-gray-300">Activities</a>
-            <a href="/alarmingemotions" className="text-white hover:text-gray-300">Alarming Emotions</a>
+            <a href="/alarmingemotions" className="text-white hover:text-gray-300">Expression Wall</a>
           </nav>
           <div className="flex items-center">
             <img onClick={AdminProfile}

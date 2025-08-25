@@ -99,7 +99,7 @@ const Flashcards = ({ category, difficulty, activity, onComplete }) => {
             correctAnswer: "Six and Seven"
           },
           {
-            questionText: "What number are missing?",
+            questionText: "What number is missing?",
             videoSrc: "/src/assets/flashcards/Easy-Numbers/numbers-2-easy.mp4",
             answerChoices: ["Two", "Five", "Three", "Six"],
             correctAnswer: "Two"

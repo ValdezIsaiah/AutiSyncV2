@@ -129,7 +129,7 @@ const Tracking = () => {
 
   const landingpage = (e) => {
     e.preventDefault(); // Prevent default form submission behavior
-    navigate("/"); // Redirect to the LoginPage route
+  navigate("/admin/students"); // Redirect to the Students page
   };
 
   const AdminProfile = (e) => {
@@ -146,7 +146,7 @@ const Tracking = () => {
             
             <a href="/tracking" className="text-white hover:text-gray-300">Tracking</a>
             <a href="/activities" className="text-white hover:text-gray-300">Activities</a>
-            <a href="/alarmingemotions" className="text-white hover:text-gray-300">Alarming Emotions</a>
+            <a href="/alarmingemotions" className="text-white hover:text-gray-300">Expression Wall</a>
           </nav>
           <div className="flex items-center">
             <img onClick={AdminProfile}
@@ -163,7 +163,16 @@ const Tracking = () => {
           <h1 className="text-3xl font-bold text-gray-800">Admin Dashboard</h1>
           <p className="text-gray-500">Monitor user progress and activity analytics</p>
         </div>
+
         <div className="flex items-center gap-4">
+          <button
+            onClick={() => navigate('/admin/students')}
+            className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 cursor-pointer rounded-lg flex items-center gap-2 transition-colors"
+          >
+            👥 Students
+          </button>
+        </div>
+        {/* <div className="flex items-center gap-4">
           <div className="bg-white rounded-lg shadow px-4 py-2 flex items-center gap-2">
             <div className="bg-blue-600 text-white w-8 h-8 flex items-center justify-center rounded-full text-sm font-semibold">
               EJ
@@ -178,7 +187,7 @@ const Tracking = () => {
             <option>Last 7 days</option>
             <option>All Time</option>
           </select>
-        </div>
+        </div> */}
       </div>
 
       {/* Metrics */}

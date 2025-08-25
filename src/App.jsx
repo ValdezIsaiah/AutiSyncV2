@@ -24,6 +24,7 @@ import ExpressionWall from './Admin/ExpressionWall';
 import Tracking from './Admin/Tracking';
 import AdminProfile from './Admin/AdminProfile.jsx';
 import AlarmingEmotions from './Admin/AlarmingEmotions.jsx';
+import Students from './Admin/Students.jsx';
 // import Notifications from './Admin/Notifications';
 
 function App() {
@@ -51,6 +52,7 @@ function App() {
         <Route path="/tracking" element={<Tracking />} />
         <Route path="/adminprofile" element={<AdminProfile />} />
         <Route path="/alarmingemotions" element={<AlarmingEmotions />} />
+        <Route path="/admin/students" element={<Students />} />
       </Routes>
     </ChatProvider>
   );
