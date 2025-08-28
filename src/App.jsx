@@ -4,6 +4,7 @@ import { Routes, Route } from 'react-router-dom';
 import ScrollToTop from './Admin/ScrollToTop';
 
 import { ChatProvider } from './components/ChatContext.jsx'; // Import ChatContext provider
+import { AuthProvider } from './contexts/AuthContext.jsx'; // Import AuthContext provider
 
 import LoginPage from './pages/LoginPage';
 import LandingPage from './pages/LandingPage';
@@ -29,9 +30,10 @@ import Students from './Admin/Students.jsx';
 
 function App() {
   return (
-    <ChatProvider> {/* Wrap your app with ChatProvider */}
-      <ScrollToTop />
-      <Routes>
+    <AuthProvider> {/* Wrap with AuthProvider */}
+      <ChatProvider> {/* Wrap your app with ChatProvider */}
+        <ScrollToTop />
+        <Routes>
         <Route path="/loginpage" element={<LoginPage />} />
         <Route path="/home" element={<HomePage />} />
         <Route path="/" element={<LandingPage />} />
@@ -55,6 +57,7 @@ function App() {
         <Route path="/admin/students" element={<Students />} />
       </Routes>
     </ChatProvider>
+    </AuthProvider>
   );
 }
 

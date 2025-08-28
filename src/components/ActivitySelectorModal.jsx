@@ -13,7 +13,7 @@ const ActivitySelectorModal = ({ isOpen, onClose, onSelect }) => {
 
   return (
     <div className="fixed inset-0 bg-black/30 flex items-center justify-center z-50">
-      <div className="bg-white p-6 rounded-2xl shadow-lg max-w-md w-full relative">
+      <div className="bg-gradient-to-br -mt-16 from-blue-50 via-purple-50 to-pink-50 p-6 rounded-2xl shadow-lg max-w-md w-full relative">
         <button
           className="absolute top-2 right-2 text-gray-500 hover:text-gray-800"
           onClick={onClose}

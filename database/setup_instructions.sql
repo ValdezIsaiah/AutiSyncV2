@@ -1,0 +1,57 @@
+-- Instructions for setting up the database table in Supabase
+-- 
+-- 1. Go to your Supabase dashboard: https://app.supabase.com/
+-- 2. Select your project: fcnhgtfofuctsevwwurf
+-- 3. Navigate to SQL Editor in the left sidebar
+-- 4. Create a new query and paste the SQL from create_user_profiles_table.sql
+-- 5. Click "Run" to execute the SQL
+--
+-- This will create:
+-- - user_profiles table with all necessary fields
+-- - Row Level Security (RLS) policies for data protection
+-- - Automatic triggers to create profiles when users sign up
+-- - Indexes for better performance
+--
+-- After running this, your StudentProfile page will be able to:
+-- - Fetch user profile data from the database
+-- - Save profile changes back to the database
+-- - Handle user authentication and permissions automatically
+
+-- Sample data for testing (run this after creating the table)
+-- Replace the UUID with an actual user ID from your auth.users table
+
+-- INSERT INTO user_profiles (
+--     id,
+--     username,
+--     first_name,
+--     last_name,
+--     email,
+--     birthday,
+--     address,
+--     gender,
+--     grade,
+--     school,
+--     interests,
+--     favorite_color,
+--     achievements,
+--     day_streak,
+--     activities_done,
+--     stars_earned
+-- ) VALUES (
+--     'your-user-uuid-here',
+--     'Test Student',
+--     'Test',
+--     'Student',
+--     'test@example.com',
+--     '2010-06-08',
+--     'Sinto Dos, Bajada, Davao City',
+--     'Male',
+--     '5th Grade',
+--     'Sunshine Elementary School',
+--     ARRAY['Drawing', 'Animals', 'Music', 'Numbers'],
+--     '#3B82F6',
+--     12,
+--     4,
+--     47,
+--     156
+-- );
