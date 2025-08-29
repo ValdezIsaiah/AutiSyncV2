@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Confetti from 'react-confetti';
 import { 
   calculateEarnedBadges, 
@@ -7,6 +8,7 @@ import {
 } from '../utils/badgeSystem';
 
 const Flashcards = ({ category, difficulty, activity, onComplete }) => {
+  const navigate = useNavigate();
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState(null);
   const [isAnswered, setIsAnswered] = useState(false);
@@ -27,10 +29,12 @@ const Flashcards = ({ category, difficulty, activity, onComplete }) => {
     const videoRef = useRef(null);
   const audioRef = useRef(null);
   const correctAudioRef = useRef(null);
+  const wrongAudioRef = useRef(null);
   const badgeAudioRef = useRef(null);
 
   const celebrationSound = "/src/assets/sounds/Activitycompletion.mp3"; // Place your sound file here
   const correctSound = "/src/assets/sounds/correct.mp3"; 
+  const wrongSound = "/src/assets/sounds/wrong.mp3";
   const badgeCelebrationSound = "/src/assets/sounds/Activitycompletion.mp3";
 
   // Pause video and play sound when modal appears
@@ -52,6 +56,13 @@ const Flashcards = ({ category, difficulty, activity, onComplete }) => {
       correctAudioRef.current.play();
     }
   }, [showCorrect]);
+
+  useEffect(() => {
+    if (showWrong && wrongAudioRef.current) {
+      wrongAudioRef.current.currentTime = 0;
+      wrongAudioRef.current.play();
+    }
+  }, [showWrong]);
 
   // Sample questions data - you can organize this by category, difficulty, and activity
   const questionsData = {
@@ -373,6 +384,7 @@ const Flashcards = ({ category, difficulty, activity, onComplete }) => {
         {/* Wrong Overlay */}
         {showWrong && (
           <div className="absolute inset-0 backdrop-blur-sm flex flex-col justify-center items-center z-50 rounded-2xl">
+            <audio ref={wrongAudioRef} src={wrongSound} />
             <div className="text-[8rem]">😞</div>
             <div className="text-red-500 text-4xl font-bold mt-2">WRONG!</div>
           </div>
@@ -578,10 +590,7 @@ const Flashcards = ({ category, difficulty, activity, onComplete }) => {
                 
                 <button
                   className="flex-1 bg-gradient-to-r from-amber-100 via-yellow-100 to-amber-200 hover:from-amber-200 hover:via-yellow-200 hover:to-amber-300 text-amber-800 px-8 py-4 rounded-2xl text-lg font-bold transition-all duration-300 transform hover:scale-105 shadow-lg flex items-center justify-center space-x-3 border-2 border-amber-200/50"
-                  onClick={() => {
-                    // Could implement badge collection view here
-                    alert("🏆 Badge Collection feature coming soon! Your badges are automatically saved!");
-                  }}
+                  onClick={() => navigate('/studentpage')}
                 >
                   <span className="text-xl animate-bounce-gentle">🏆</span>
                   <span>View Collection</span>

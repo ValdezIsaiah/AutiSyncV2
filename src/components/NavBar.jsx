@@ -26,13 +26,13 @@ const NavBar = ({ onProfileClick }) => {
       <div className="container mx-auto px-6 flex justify-between items-center">
         <h2 className="text-white text-2xl font-bold">AutiSync v2.0</h2>
         <nav className="flex items-center text-lg space-x-6">
-          <a href="/home" className="text-white hover:text-blue-900 font-semibold transition-colors duration-200 flex items-center">
+          <a href="/home" className="text-white hover:text-blue-900 transition-colors duration-200 flex items-center">
                 Home
               </a>
-          <a href="/flashcardspage" className="text-white hover:text-blue-900 font-semibold transition-colors duration-200 flex items-center">
+          <a href="/flashcardspage" className="text-white hover:text-blue-900 transition-colors duration-200 flex items-center">
                 Activities
               </a>
-          <a href="/studentpage" className="text-white  hover:text-blue-900 font-semibold transition-colors duration-200 flex items-center">
+          <a href="/studentpage" className="text-white  hover:text-blue-900 transition-colors duration-200 flex items-center">
                 Learning Hub
               </a>
           <div 

@@ -48,15 +48,6 @@ const StudentPage = () => {
       animation: 'animate-pulse-gentle'
     },
     {
-      icon: '🦋',
-      title: 'Social Butterfly',
-      description: 'Mastered social interactions',
-      status: 'EARNED',
-      color: 'from-pink-400 to-pink-600',
-      bgColor: 'bg-pink-50',
-      animation: 'animate-float'
-    },
-    {
       icon: '🏆',
       title: 'Perfect Week',
       description: 'Complete activities 7 days in a row',
@@ -66,36 +57,63 @@ const StudentPage = () => {
       animation: ''
     },
     {
-      icon: '👂',
-      title: 'Communication Champion',
-      description: 'Improved communication skills',
+      icon: '🎨',
+      title: 'Color Master',
+      description: 'Awarded for completing 5 color-related activities',
+      status: 'EARNED',
+      color: 'from-purple-400 to-purple-600',
+      bgColor: 'bg-purple-50',
+      animation: 'animate-bounce-gentle'
+    },
+    {
+      icon: '🔷',
+      title: 'Shape Explorer',
+      description: 'Awarded after finishing 5 shape activities',
+      status: 'EARNED',
+      color: 'from-blue-400 to-indigo-600',
+      bgColor: 'bg-blue-50',
+      animation: 'animate-float'
+    },
+    {
+      icon: '�',
+      title: 'Number Ninja',
+      description: 'Earned by correctly answering 20 number-related questions',
       status: 'EARNED',
       color: 'from-green-400 to-green-600',
       bgColor: 'bg-green-50',
       animation: 'animate-wiggle'
     },
     {
-      icon: '🧩',
-      title: 'Puzzle Master',
-      description: 'Completed cognitive activities',
-      status: 'EARNED',
-      color: 'from-indigo-400 to-indigo-600',
-      bgColor: 'bg-indigo-50',
-      animation: 'animate-bounce-gentle'
+      icon: '📅',
+      title: 'Consistency Champ',
+      description: 'Given for completing activities 3 days in a row',
+      status: 'LOCKED',
+      color: 'from-gray-400 to-gray-500',
+      bgColor: 'bg-gray-50',
+      animation: ''
     },
     {
-      icon: '🖌️',
-      title: 'Creative Artist',
-      description: 'Engaged in creative arts',
+      icon: '🤝',
+      title: 'Helper Badge',
+      description: 'For activities done collaboratively with a parent/teacher',
+      status: 'EARNED',
+      color: 'from-orange-400 to-orange-600',
+      bgColor: 'bg-orange-50',
+      animation: 'animate-pulse-gentle'
+    },
+    {
+      icon: '🏠',
+      title: 'Daily Life Hero',
+      description: 'Awarded for finishing 5 "Daily Life Skills" activities',
       status: 'EARNED',
       color: 'from-teal-400 to-teal-600',
       bgColor: 'bg-teal-50',
       animation: 'animate-float-delayed'
     },
     {
-      icon: '🎵',
-      title: 'Rhythm Master',
-      description: 'Completed music activities',
+      icon: '�',
+      title: 'All-Rounder',
+      description: 'Earned when a student completes at least one activity in every category',
       status: 'LOCKED',
       color: 'from-gray-400 to-gray-500',
       bgColor: 'bg-gray-50',
@@ -160,7 +178,7 @@ const StudentPage = () => {
       {/* Banner Section */}
       <div className="relative z-10 h-48 sm:h-64 overflow-hidden">
         <img
-          src="/src/assets/banner.jpg"
+          src="/src/assets/bg_cover.png"
           alt="Learning Banner"
           className="w-full h-full object-cover"
         />
@@ -198,7 +216,7 @@ const StudentPage = () => {
               <div className="absolute top-0 right-0 w-24 h-24 bg-orange-200/20 rounded-full blur-2xl"></div>
               
               <div className="relative z-10">
-                <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center justify-between -mb-3 -mt-3">
                   <div>
                     <span className="text-6xl font-bold text-orange-600">
                       {streakDays}
@@ -207,8 +225,16 @@ const StudentPage = () => {
                       day Streak!
                     </span>
                   </div>
-                  <div className="w-20 h-20 bg-gradient-to-br from-orange-400 to-red-500 rounded-2xl flex items-center justify-center shadow-lg animate-bounce-gentle">
-                    <span className="text-3xl">🔥</span>
+                  <div className="flex items-center justify-center animate-bounce-gentle">
+                    <img 
+                      src="/src/assets/firesticker.png" 
+                      alt="Streak" 
+                      className="w-28 h-28 relative right-10 object-contain" 
+                      style={{ 
+                        mixBlendMode: 'multiply',
+                        filter: 'drop-shadow(0 4px 8px rgba(0,0,0,0.1))'
+                      }}
+                    />
                   </div>
                 </div>
                 <p className="text-gray-600 font-medium">

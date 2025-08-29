@@ -117,6 +117,83 @@ export const createBadgeDefinitions = (category, difficulty, activity) => [
     type: BADGE_TYPES.SPECIAL,
     criteria: (score, total, stats) => total >= 3 && score > 0,
     points: 20
+  },
+  {
+    id: 'color_master',
+    name: 'Color Master',
+    description: 'Awarded for completing 5 color-related activities',
+    icon: '🎨',
+    gradient: 'from-purple-400 via-purple-500 to-purple-600',
+    rarity: BADGE_RARITIES.RARE,
+    type: BADGE_TYPES.MASTERY,
+    criteria: (score, total, stats) => stats.colorActivitiesCompleted >= 5,
+    points: 75
+  },
+  {
+    id: 'shape_explorer',
+    name: 'Shape Explorer',
+    description: 'Awarded after finishing 5 shape activities',
+    icon: '🔷',
+    gradient: 'from-blue-400 via-indigo-500 to-indigo-600',
+    rarity: BADGE_RARITIES.RARE,
+    type: BADGE_TYPES.MASTERY,
+    criteria: (score, total, stats) => stats.shapeActivitiesCompleted >= 5,
+    points: 75
+  },
+  {
+    id: 'number_ninja',
+    name: 'Number Ninja',
+    description: 'Earned by correctly answering 20 number-related questions',
+    icon: '🔢',
+    gradient: 'from-green-400 via-green-500 to-green-600',
+    rarity: BADGE_RARITIES.EPIC,
+    type: BADGE_TYPES.MASTERY,
+    criteria: (score, total, stats) => stats.correctNumberAnswers >= 20,
+    points: 100
+  },
+  {
+    id: 'consistency_champ',
+    name: 'Consistency Champ',
+    description: 'Given for completing activities 3 days in a row',
+    icon: '📅',
+    gradient: 'from-orange-400 via-orange-500 to-red-500',
+    rarity: BADGE_RARITIES.EPIC,
+    type: BADGE_TYPES.STREAK,
+    criteria: (score, total, stats) => stats.consecutiveDays >= 3,
+    points: 100
+  },
+  {
+    id: 'helper_badge',
+    name: 'Helper Badge',
+    description: 'For activities done collaboratively with a parent/teacher',
+    icon: '🤝',
+    gradient: 'from-orange-400 via-orange-500 to-orange-600',
+    rarity: BADGE_RARITIES.RARE,
+    type: BADGE_TYPES.SPECIAL,
+    criteria: (score, total, stats) => stats.collaborativeActivities >= 1,
+    points: 50
+  },
+  {
+    id: 'daily_life_hero',
+    name: 'Daily Life Hero',
+    description: 'Awarded for finishing 5 "Daily Life Skills" activities',
+    icon: '🏠',
+    gradient: 'from-teal-400 via-teal-500 to-teal-600',
+    rarity: BADGE_RARITIES.RARE,
+    type: BADGE_TYPES.MASTERY,
+    criteria: (score, total, stats) => stats.dailyLifeActivitiesCompleted >= 5,
+    points: 75
+  },
+  {
+    id: 'all_rounder',
+    name: 'All-Rounder',
+    description: 'Earned when a student completes at least one activity in every category',
+    icon: '🏆',
+    gradient: 'from-yellow-400 via-yellow-500 to-amber-600',
+    rarity: BADGE_RARITIES.LEGENDARY,
+    type: BADGE_TYPES.MASTERY,
+    criteria: (score, total, stats) => stats.allCategoriesCompleted === true,
+    points: 150
   }
 ];
 
@@ -126,11 +203,17 @@ export function getCategoryIcon(category) {
     'Academic': '📚',
     'Social': '👥',
     'Life Skills': '🏠',
+    'Daily Life Skills': '🏠',
     'Communication': '💬',
     'Math': '🔢',
+    'Numbers': '🔢',
     'Science': '🔬',
     'Reading': '📖',
-    'Art': '🎨'
+    'Art': '🎨',
+    'Colors': '🎨',
+    'Shapes': '🔷',
+    'Music': '🎵',
+    'Physical': '💪'
   };
   return icons[category] || '📚';
 }

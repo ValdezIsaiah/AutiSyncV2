@@ -35,7 +35,7 @@ const LandingPage = () => {
                 <span className="text-white font-bold text-lg">A</span>
               </div>
               <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-800 to-purple-600 bg-clip-text text-transparent">
-                AutiSync
+                AutiSync v2.0
               </h1>
             </div>
             
@@ -60,7 +60,7 @@ const LandingPage = () => {
                 <h2 className="text-5xl sm:text-6xl font-bold mb-6">
                   <span className="block text-gray-800">Welcome to</span>
                   <span className="text-blue-900">
-                    AutiSync
+                    AutiSync v2.0
                   </span>
                 </h2>
                 

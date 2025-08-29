@@ -14,12 +14,12 @@ const HomePage = () => {
   const [showModal, setShowModal] = useState(false);
   const [selectedLevel, setSelectedLevel] = useState(3);
   const [expressions, setExpressions] = useState([
-    { emotion: "Happy", description: "Feeling Happy at level 2", image: "src/assets/happy.png", level: 5, time: "2 hours ago" },
-    { emotion: "Calm", description: "Feeling calm at level 5", image: "src/assets/calm.png", level: 4, time: "5 hours ago" },
-    { emotion: "Excited", description: "Feeling excited at level 4", image: "src/assets/excited.png", level: 5, time: "Yesterday" },
-    { emotion: "Calm", description: "Feeling calm at level 2", image: "src/assets/calm.png", level: 5, time: "1 hour ago" },
-    { emotion: "Sad", description: "Feeling sad at level 3", image: "src/assets/sad.png", level: 5, time: "2 hours ago" },
-    { emotion: "Excited", description: "Feeling excited at level 1", image: "src/assets/excited.png", level: 5, time: "Yesterday" },
+    { emotion: "Happy", description: "Feeling Happy at level 2", image: "src/assets/happy.png", level: 2, time: "2 hours ago", userName: "Emma" },
+    { emotion: "Calm", description: "Feeling calm at level 5", image: "src/assets/calm.png", level: 5, time: "5 hours ago", userName: "Alex" },
+    { emotion: "Excited", description: "Feeling excited at level 4", image: "src/assets/excited.png", level: 4, time: "Yesterday", userName: "Sam" },
+    { emotion: "Calm", description: "Feeling calm at level 2", image: "src/assets/calm.png", level: 2, time: "1 hour ago", userName: "Jordan" },
+    { emotion: "Sad", description: "Feeling sad at level 3", image: "src/assets/sad.png", level: 3, time: "2 hours ago", userName: "Riley" },
+    { emotion: "Excited", description: "Feeling excited at level 1", image: "src/assets/excited.png", level: 1, time: "Yesterday", userName: "Casey" },
   ]);
 
   const navigate = useNavigate();
@@ -39,6 +39,7 @@ const HomePage = () => {
       image: emotionData?.image,
       level: selectedLevel,
       time: "Just now",
+      userName: "Chris", // Current user name from header
     };
 
     setExpressions((prev) => [newExpression, ...prev]);
@@ -50,13 +51,8 @@ const HomePage = () => {
   const studentProfileRoute = () => navigate("/studentprofile");
 
   const getLevelColor = (level) => {
-    const colors = ['bg-green-500', 'bg-green-500', 'bg-green-500', 'bg-green-700', 'bg-orange-900'];
+    const colors = ['bg-green-500', 'bg-yellow-500', 'bg-orange-500', 'bg-red-500', 'bg-purple-600'];
     return colors[level - 1] || 'bg-gray-500';
-  };
-
-  const getLevelEmoji = (level) => {
-    const emojis = ['😊', '🙂', '😐', '😟', '😢'];
-    return emojis[level - 1] || '😐';
   };
 
     const goToProfile = () => {
@@ -81,18 +77,18 @@ const HomePage = () => {
                 <span className="text-white font-bold text-lg">A</span>
               </div>
               <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-                AutiSync
+                AutiSync v2.0
               </h1>
             </div>
             
             <nav className="hidden md:flex items-center space-x-6">
-              <a href="/home" className="text-gray-700 hover:text-blue-600 font-semibold transition-colors duration-200 flex items-center">
+              <a href="/home" className="text-blue-600 hover:text-blue-600 font-semibold transition-colors duration-200 flex items-center">
                 Home
               </a>
               <a href="/flashcardspage" className="text-gray-700 hover:text-blue-600 font-semibold transition-colors duration-200 flex items-center">
                 Activities
               </a>
-              <a href="/studentpage" className="text-blue-600 font-semibold transition-colors duration-200 flex items-center">
+              <a href="/studentpage" className="text-gray-700  hover:text-blue-600 font-semibold transition-colors duration-200 flex items-center">
                 Learning Hub
               </a>
             </nav>
@@ -194,7 +190,7 @@ const HomePage = () => {
                   How are you feeling today?
                 </h2>
                 <p className="text-lg text-gray-600">
-                  Choose the emotion that matches how you feel right now! 💭
+                  Choose your emotion and rate it from 1 to 5! 🎯✨
                 </p>
               </div>
               
@@ -234,20 +230,22 @@ const HomePage = () => {
 
             {/* Your Emotion Journal section - moved inside video tutorial container */}
             <div className="mt-18 px-8">
-              <h2 className="text-3xl font-bold text-gray-800 mb-6 flex justify-center">
+              <div className="text-center mb-6">
+                <h2 className="text-3xl font-bold text-gray-800 mb-2 flex items-center justify-center">
+                  <span className="text-4xl mr-3 animate-float">📖</span>
+                  Community Expression Wall
+                </h2>
                 
-                Your Emotion Journal
-                <span className="text-4xl mr-3 animate-float">📖</span>
-              </h2>
+              </div>
               
               <div className="grid md:grid-cols-4 gap-6">
                 {expressions.map((expr, index) => (
                   <div 
                     key={index} 
-                    className="card-autism-friendly bg-gradient-to-r from-blue-100 to-white p-6 rounded-2xl shadow-lg border-l-4 border-blue-500 w-85"
+                    className="card-autism-friendly bg-gradient-to-r from-blue-100 to-white p-6 rounded-2xl shadow-lg border-l-4 border-blue-500 w-82"
                     style={{animationDelay: `${index * 0.1}s`}}
                   >
-                    {/* Emotions shared container */}
+                    {/* Emotions shared container */}``
                     <div className="flex items-center space-x-4">                
                       <div className="w-16 h-16 rounded-2xl overflow-hidden shadow-lg">
                         <img
@@ -260,14 +258,18 @@ const HomePage = () => {
                         <div className="flex items-center space-x-3 mb-2">
                           <span className="text-xl font-bold text-gray-800">{expr.emotion}</span>
                           <div className={`px-3 py-1 ${getLevelColor(expr.level)} rounded-full text-white text-sm font-semibold flex items-center space-x-1`}>
-                            <span>{getLevelEmoji(expr.level)}</span>
                             <span>Level {expr.level}</span>
                           </div>
-                          
                         </div>
                         
-                        <p className="text-gray-700">{expr.description}</p>
-                        <span className="text-sm text-gray-500">{expr.time}</span>
+                        <p className="text-gray-700 mb-2">{expr.description}</p>
+                        <div className="flex items-center justify-between text-sm">
+                          <div className="flex items-center space-x-2">
+                            <span className="text-lg">👤</span>
+                            <span className="text-blue-600 font-bold bg-blue-50 px-2 py-1 rounded-lg">{expr.userName}</span>
+                          </div>
+                          <span className="text-gray-500 bg-gray-100 px-2 py-1 rounded-lg">{expr.time}</span>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -277,7 +279,7 @@ const HomePage = () => {
             
             {/* Categories Section */}
         <section className="mb-12 mt-10 ">
-          <div className="card-autism-friendly bg-white/80 backdrop-blur-xl rounded-3xl p-6 shadow-2xl border border-white/20">
+          <div className="card-autism-friendly bg-white-500 backdrop-blur-2xl rounded-3xl p-6 shadow-2xl border border-white/20">
             <div className="text-center mb-8">
               <h2 className="text-3xl font-bold text-gray-800 mb-4 flex items-center justify-center">
                 
@@ -291,7 +293,7 @@ const HomePage = () => {
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {/* Academic Category */}
-              <div className="card-autism-friendly bg-gradient-to-br from-blue-50 to-indigo-50 p-8 rounded-3xl text-center cursor-pointer border-3 border-white/50 hover:border-blue-300 hover:shadow-xl transition-all duration-300 group">
+              <div className=" bg-gradient-to-br from-blue-50 to-indigo-50 p-8 rounded-3xl text-center cursor-pointer border-3 border-white/50 hover:border-blue-300 hover:shadow-xl transition-all duration-300 group">
                 <div className="w-24 h-24 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-3xl mx-auto mb-6 flex items-center justify-center shadow-xl group-hover:scale-110 transition-transform duration-300">
                   <span className="text-white text-4xl">🎓</span>
                 </div>
@@ -302,7 +304,7 @@ const HomePage = () => {
               </div>
 
               {/* Social/Daily Life Skills Category */}
-              <div className="card-autism-friendly bg-gradient-to-br from-orange-50 to-yellow-50 p-8 rounded-3xl text-center cursor-pointer border-3 border-white/50 hover:border-orange-300 hover:shadow-xl transition-all duration-300 group">
+              <div className=" bg-gradient-to-br from-orange-50 to-yellow-50 p-8 rounded-3xl text-center cursor-pointer border-3 border-white/50 hover:border-orange-300 hover:shadow-xl transition-all duration-300 group">
                 <div className="w-24 h-24 bg-gradient-to-r from-orange-500 to-yellow-500 rounded-3xl mx-auto mb-6 flex items-center justify-center shadow-xl group-hover:scale-110 transition-transform duration-300">
                   <span className="text-white text-4xl">👥</span>
                 </div>
@@ -319,21 +321,19 @@ const HomePage = () => {
 
         {/* Difficulty Levels Section */}
         <section className="mb-12">
-          <div className="card-autism-friendly bg-white/80 backdrop-blur-xl rounded-3xl p-6 shadow-2xl border border-white/20">
+          <div className=" bg-white/80 backdrop-blur-xl rounded-3xl p-6 shadow-2xl border border-white/20">
             <div className="text-center mb-8">
               <h2 className="text-3xl font-bold text-gray-800 mb-4 flex items-center justify-center">
                 
                Difficulty Levels
                <span className="text-4xl mr-3 animate-bounce-gentle">⭐</span>
               </h2>
-              <p className="text-lg text-gray-600">
-                Pick the level that's just right for you! 🎯
-              </p>
+              
             </div>
             
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {/* Easy Level */}
-              <div className="card-autism-friendly bg-gradient-to-br from-green-50 to-emerald-50 p-8 rounded-3xl text-center cursor-pointer border-3 border-white/50 hover:border-green-300 hover:shadow-xl transition-all duration-300 group">
+              <div className=" bg-gradient-to-br from-green-50 to-emerald-50 p-8 rounded-3xl text-center cursor-pointer border-3 border-white/50 hover:border-green-300 hover:shadow-xl transition-all duration-300 group">
                 <div className="w-24 h-24 bg-gradient-to-r from-green-500 to-emerald-600 rounded-3xl mx-auto mb-6 flex items-center justify-center shadow-xl group-hover:scale-110 transition-transform duration-300">
                   <span className="text-white text-4xl">✓</span>
                 </div>
@@ -369,10 +369,10 @@ const HomePage = () => {
             {/* Start Learning Button */}
                 <div className="text-center mt-8">
                   <button
-                    className="btn-autism-friendly bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-8 py-4 rounded-2xl font-bold text-lg shadow-xl hover:shadow-2xl transform hover:scale-105 transition-all duration-300 flex items-center mx-auto"
+                    className="cursor-pointer btn-autism-friendly bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-8 py-4 rounded-2xl font-bold text-lg shadow-xl hover:shadow-2xl transform hover:scale-105 transition-all duration-300 flex items-center mx-auto"
                     onClick={() => navigate('/studentpage')}
                   >
-                    <span className="mr-3 text-2xl">🚀</span>
+                    <span className="cursor-pointer mr-3 text-2xl">🚀</span>
                     Start Learning
                   </button>
                 </div>
@@ -388,7 +388,7 @@ const HomePage = () => {
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
           <div className="bg-white/95 backdrop-blur-xl p-8 rounded-3xl w-full max-w-md shadow-2xl border border-white/20 animate-fade-in-scale">
             <div className="text-center">
-              <div className="w-24 h-24 mx-auto mb-6 rounded-2xl overflow-hidden shadow-lg">
+              <div className="w-24 h-24 mx-auto mb-6 rounded-2xl overflow-hidden shadow-lg animate-bounce-gentle">
                 <img
                   src={Emotions.find((emotion) => emotion.name === selectedEmotion)?.image}
                   alt={selectedEmotion}
@@ -396,43 +396,64 @@ const HomePage = () => {
                 />
               </div>
               
-              <h2 className="text-2xl font-bold text-gray-800 mb-2">
-                You're feeling <span className="text-blue-600">{selectedEmotion}</span>! 
+              <h2 className="text-3xl font-bold text-gray-800 mb-2">
+                You're feeling <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">{selectedEmotion}</span>! 
               </h2>
-              <p className="text-gray-600 mb-6">How strong is this feeling?</p>
+              <p className="text-gray-600 mb-6 text-lg">How strong is this feeling? Pick a number! 🎯</p>
 
-              {/* Level Slider */}
+              {/* Level Selection */}
               <div className="mb-8">
-                <div className="flex justify-between text-sm text-gray-600 mb-2">
-                  <span>Very Light</span>
-                  <span>Very Strong</span>
-                </div>
-                
-                <div className="relative">
-                  <input
-                    type="range"
-                    min="1"
-                    max="5"
-                    value={selectedLevel}
-                    onChange={(e) => setSelectedLevel(parseInt(e.target.value))}
-                    className="w-full h-2 rounded-lg appearance-none cursor-pointer"
-                    style={{
-                      background: `linear-gradient(to right, #10B981 0%, #F59E0B 25%, #F97316 50%, #EF4444 75%, #DC2626 100%)`
-                    }}
-                  />
-                  <div className="flex justify-between text-2xl mt-2">
-                    {[1,2,3,4,5].map(level => (
-                      <span key={level} className={selectedLevel === level ? 'animate-bounce-gentle' : 'opacity-50'}>
-                        {getLevelEmoji(level)}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-                
-                <div className="mt-4 text-center">
-                  <span className={`inline-flex px-4 py-2 ${getLevelColor(selectedLevel)} text-white rounded-full font-semibold`}>
-                    Level {selectedLevel} - {getLevelEmoji(selectedLevel)}
+                <div className="flex justify-between text-sm text-gray-600 mb-4 px-2">
+                  <span className="flex items-center space-x-1">
+                    <span>1️⃣</span>
+                    <span>Very Light</span>
                   </span>
+                  <span className="flex items-center space-x-1">
+                    <span>5️⃣</span>
+                    <span>Very Strong</span>
+                  </span>
+                </div>
+                
+                {/* Number-based level selector */}
+                <div className="grid grid-cols-5 gap-3 mb-6">
+                  {[1,2,3,4,5].map(level => (
+                    <button
+                      key={level}
+                      onClick={() => setSelectedLevel(level)}
+                      className={`
+                        w-full aspect-square rounded-2xl font-bold text-3xl border-3 transition-all duration-300 transform hover:scale-105 relative overflow-hidden
+                        ${selectedLevel === level 
+                          ? `${getLevelColor(level)} text-white border-white shadow-2xl scale-110 animate-bounce-gentle` 
+                          : 'bg-white hover:bg-gray-50 text-gray-700 border-gray-200 hover:border-gray-400 shadow-lg'
+                        }
+                      `}
+                    >
+                      {/* Number with subtle background gradient when selected */}
+                      <div className="relative z-10">{level}</div>
+                      
+                      {/* Animated selection indicator */}
+                      {selectedLevel === level && (
+                        <div className="absolute inset-0 bg-gradient-to-r from-white/20 via-transparent to-white/20 animate-shimmer"></div>
+                      )}
+                    </button>
+                  ))}
+                </div>
+                
+                {/* Level description */}
+                <div className="text-center">
+                  <div className={`inline-flex px-6 py-3 ${getLevelColor(selectedLevel)} text-white rounded-2xl font-bold text-xl shadow-xl border-2 border-white/30`}>
+                    <span className="mr-2">Level {selectedLevel}</span>
+                    <span className="text-2xl animate-bounce-gentle">
+                      {selectedLevel <= 2 ? '😌' : selectedLevel === 3 ? '😊' : selectedLevel === 4 ? '😄' : '🤗'}
+                    </span>
+                  </div>
+                  <p className="text-sm text-gray-600 mt-3 font-semibold">
+                    {selectedLevel === 1 ? "Just a tiny bit - barely noticeable" :
+                     selectedLevel === 2 ? "A little bit - light feeling" :
+                     selectedLevel === 3 ? "Medium amount - noticeable feeling" :
+                     selectedLevel === 4 ? "Quite a lot - strong feeling" :
+                     "Very much - overwhelming feeling"}
+                  </p>
                 </div>
               </div>
 
@@ -440,15 +461,17 @@ const HomePage = () => {
               <div className="flex space-x-4">
                 <button
                   onClick={() => setShowModal(false)}
-                  className="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-700 py-3 px-6 rounded-xl font-semibold transition-all duration-300"
+                  className="flex-1 bg-gradient-to-r from-gray-100 to-gray-200 hover:from-gray-200 hover:to-gray-300 text-gray-700 py-4 px-6 rounded-xl font-bold text-lg transition-all duration-300 transform hover:scale-105 shadow-lg"
                 >
                   Cancel
                 </button>
                 <button
                   onClick={handleSubmit}
-                  className="btn-autism-friendly flex-1 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white py-3 px-6 rounded-xl font-semibold shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300"
+                  className="cursor-pointer btn-autism-friendly flex-1 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 hover:from-blue-700 hover:via-purple-700 hover:to-pink-700 text-white py-4 px-6 rounded-xl font-bold text-lg shadow-xl hover:shadow-2xl transform hover:scale-105 transition-all duration-300 flex items-center justify-center space-x-2"
                 >
-                  Save Feeling! ✨
+                  <span className="text-2xl animate-bounce-gentle">💫</span>
+                  <span>Share My Feeling!</span>
+                  <span className="text-xl animate-pulse-gentle">✨</span>
                 </button>
               </div>
             </div>
@@ -561,6 +584,16 @@ const HomePage = () => {
         
         .animate-fade-in-scale {
           animation: fade-in-scale 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        /* Shimmer animation for selected level */
+        @keyframes shimmer {
+          0% { transform: translateX(-100%); }
+          100% { transform: translateX(100%); }
+        }
+        
+        .animate-shimmer {
+          animation: shimmer 2s ease-in-out infinite;
         }
         
         /* Accessibility: Reduce motion for users who prefer it */

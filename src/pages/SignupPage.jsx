@@ -5,19 +5,22 @@ import { supabase } from '../lib/supabase';
 function SignupPage() {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
-    firstName: '',
-    lastName: '',
+    fullName: '',
     email: '',
     password: '',
     confirmPassword: '',
     age: '',
-    parentEmail: ''
+    parentEmail: '',
+    address: '',
+    gender: '',
+    phoneNumber: ''
   });
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+  const [userType, setUserType] = useState("student"); // "student" or "admin"
 
   const handleInputChange = (e) => {
     setFormData({
@@ -49,6 +52,13 @@ function SignupPage() {
       return;
     }
 
+    // Validate passwords match (only for admin accounts)
+    if (userType === 'admin' && formData.password !== formData.confirmPassword) {
+      setError("Passwords do not match!");
+      setLoading(false);
+      return;
+    }
+
     // Validate password length
     if (formData.password.length < 6) {
       setError("Password must be at least 6 characters long!");
@@ -63,11 +73,13 @@ function SignupPage() {
         password: formData.password,
         options: {
           data: {
-            first_name: formData.firstName,
-            last_name: formData.lastName,
-            age: parseInt(formData.age),
-            parent_email: formData.parentEmail,
-            full_name: `${formData.firstName} ${formData.lastName}`
+            full_name: formData.fullName,
+            age: userType === 'student' ? parseInt(formData.age) : null,
+            parent_email: userType === 'student' ? formData.parentEmail : null,
+            address: formData.address,
+            gender: formData.gender, // Gender for both students and admins
+            phone_number: userType === 'admin' ? formData.phoneNumber : null,
+            user_type: userType // Store the user type
           }
         }
       });
@@ -112,7 +124,7 @@ function SignupPage() {
               <span className="text-white font-bold text-2xl">A</span>
             </div>
           </div>
-          <h2 className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-2">
+          <h2 className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-1 -mt-2">
             AutiSync
           </h2>
           <div className="bg-gradient-to-r from-green-100 to-blue-100 rounded-2xl p-4 mb-4">
@@ -141,40 +153,56 @@ function SignupPage() {
         )}
 
         <form className="space-y-6" onSubmit={handleSignup}>
-          {/* Name Fields */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div>
-              <label htmlFor="firstName" className="flex items-center text-sm font-bold text-gray-700 mb-2">
-                <span className="text-lg mr-2">👤</span>
-                First Name
-              </label>
-              <input
-                type="text"
-                id="firstName"
-                name="firstName"
-                value={formData.firstName}
-                onChange={handleInputChange}
-                className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200 text-lg placeholder-gray-400 transition-all duration-300"
-                placeholder="Your first name"
-                required
-              />
+          {/* User type selection */}
+          <div className="mb-6">
+            <label className="block text-sm font-bold text-gray-700 mb-3 text-center">
+              <span className="text-lg mr-2">🎯</span>
+              What type of account would you like to create?
+            </label>
+            <div className="flex justify-center gap-4">
+              <button
+                type="button"
+                className={`px-6 py-3 rounded-xl font-bold border-2 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-200 text-base shadow-sm flex items-center space-x-2 ${
+                  userType === 'student' 
+                    ? 'bg-blue-100 border-blue-500 text-blue-900 transform scale-105' 
+                    : 'bg-white border-gray-300 text-gray-600 hover:bg-gray-50'
+                }`}
+                onClick={() => setUserType('student')}
+              >
+                <span className="text-xl">👦</span>
+                <span>Student</span>
+              </button>
+              <button
+                type="button"
+                className={`px-6 py-3 rounded-xl font-bold border-2 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-purple-200 text-base shadow-sm flex items-center space-x-2 ${
+                  userType === 'admin' 
+                    ? 'bg-purple-100 border-purple-500 text-purple-900 transform scale-105' 
+                    : 'bg-white border-gray-300 text-gray-600 hover:bg-gray-50'
+                }`}
+                onClick={() => setUserType('admin')}
+              >
+                <span className="text-xl">🧑‍🏫</span>
+                <span>Teacher/Admin</span>
+              </button>
             </div>
-            <div>
-              <label htmlFor="lastName" className="flex items-center text-sm font-bold text-gray-700 mb-2">
-                <span className="text-lg mr-2">👤</span>
-                Last Name
-              </label>
-              <input
-                type="text"
-                id="lastName"
-                name="lastName"
-                value={formData.lastName}
-                onChange={handleInputChange}
-                className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200 text-lg placeholder-gray-400 transition-all duration-300"
-                placeholder="Your last name"
-                required
-              />
-            </div>
+          </div>
+
+          {/* Name Field */}
+          <div>
+            <label htmlFor="fullName" className="flex items-center text-sm font-bold text-gray-700 mb-2">
+              <span className="text-lg mr-2">👤</span>
+              Full Name
+            </label>
+            <input
+              type="text"
+              id="fullName"
+              name="fullName"
+              value={formData.fullName}
+              onChange={handleInputChange}
+              className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200 text-lg placeholder-gray-400 transition-all duration-300"
+              placeholder="Enter your full name"
+              required
+            />
           </div>
 
           {/* Email Field */}
@@ -195,72 +223,137 @@ function SignupPage() {
             />
           </div>
 
-          {/* Age Field */}
+          {/* Address Field - For both students and admins */}
           <div>
-            <label htmlFor="age" className="flex items-center text-sm font-bold text-gray-700 mb-2">
-              <span className="text-lg mr-2">🎂</span>
-              Age
+            <label htmlFor="address" className="flex items-center text-sm font-bold text-gray-700 mb-2">
+              <span className="text-lg mr-2">🏠</span>
+              Address
             </label>
             <input
-              type="number"
-              id="age"
-              name="age"
-              value={formData.age}
+              type="text"
+              id="address"
+              name="address"
+              value={formData.address}
               onChange={handleInputChange}
               className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200 text-lg placeholder-gray-400 transition-all duration-300"
-              placeholder="How old are you?"
-              min="5"
-              max="25"
+              placeholder="Enter your address"
               required
             />
           </div>
 
-          {/* Parent Email Field */}
-          <div>
-            <label htmlFor="parentEmail" className="flex items-center text-sm font-bold text-gray-700 mb-2">
-              <span className="text-lg mr-2">👨‍👩‍👧‍👦</span>
-              Parent/Guardian Email
-            </label>
-            <input
-              type="email"
-              id="parentEmail"
-              name="parentEmail"
-              value={formData.parentEmail}
-              onChange={handleInputChange}
-              className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200 text-lg placeholder-gray-400 transition-all duration-300"
-              placeholder="parent@example.com"
-              required
-            />
-          </div>
-
-          {/* Password Fields */}
-          <div className="space-y-4">
+          {/* Age Field - Only show for students */}
+          {userType === 'student' && (
             <div>
-              <label htmlFor="password" className="flex items-center text-sm font-bold text-gray-700 mb-2">
-                <span className="text-lg mr-2">🔒</span>
-                Password
+              <label htmlFor="age" className="flex items-center text-sm font-bold text-gray-700 mb-2">
+                <span className="text-lg mr-2">🎂</span>
+                Age
               </label>
-              <div className="relative">
-                <input
-                  type={showPassword ? "text" : "password"}
-                  id="password"
-                  name="password"
-                  value={formData.password}
-                  onChange={handleInputChange}
-                  className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200 text-lg transition-all duration-300"
-                  placeholder="Create a strong password"
-                  required
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400 hover:text-gray-600 transition-colors duration-200"
-                >
-                  <span className="text-lg">{showPassword ? "🙈" : "👀"}</span>
-                </button>
-              </div>
+              <input
+                type="number"
+                id="age"
+                name="age"
+                value={formData.age}
+                onChange={handleInputChange}
+                className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200 text-lg placeholder-gray-400 transition-all duration-300"
+                placeholder="How old are you?"
+                min="5"
+                max="25"
+                required={userType === 'student'}
+              />
             </div>
+          )}
 
+          {/* Parent Email Field - Only show for students */}
+          {userType === 'student' && (
+            <div>
+              <label htmlFor="parentEmail" className="flex items-center text-sm font-bold text-gray-700 mb-2">
+                <span className="text-lg mr-2">👨‍👩‍👧‍👦</span>
+                Parent/Guardian Email
+              </label>
+              <input
+                type="email"
+                id="parentEmail"
+                name="parentEmail"
+                value={formData.parentEmail}
+                onChange={handleInputChange}
+                className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200 text-lg placeholder-gray-400 transition-all duration-300"
+                placeholder="parent@example.com"
+                required={userType === 'student'}
+              />
+            </div>
+          )}
+
+          {/* Gender Field - For both students and admins */}
+          <div>
+            <label htmlFor="gender" className="flex items-center text-sm font-bold text-gray-700 mb-2">
+              <span className="text-lg mr-2">⚧️</span>
+              Gender
+            </label>
+            <select
+              id="gender"
+              name="gender"
+              value={formData.gender}
+              onChange={handleInputChange}
+              className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200 text-lg transition-all duration-300"
+              required
+            >
+              <option value="">Select your gender</option>
+              <option value="Male">Male</option>
+              <option value="Female">Female</option>
+              <option value="Other">Other</option>
+              <option value="Prefer not to say">Prefer not to say</option>
+            </select>
+          </div>
+
+          {/* Phone Number Field - Only show for admins */}
+          {userType === 'admin' && (
+            <div>
+              <label htmlFor="phoneNumber" className="flex items-center text-sm font-bold text-gray-700 mb-2">
+                <span className="text-lg mr-2">📞</span>
+                Phone Number
+              </label>
+              <input
+                type="tel"
+                id="phoneNumber"
+                name="phoneNumber"
+                value={formData.phoneNumber}
+                onChange={handleInputChange}
+                className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200 text-lg placeholder-gray-400 transition-all duration-300"
+                placeholder="+63 912 345 6789"
+                required={userType === 'admin'}
+              />
+            </div>
+          )}
+
+          {/* Password Field */}
+          <div>
+            <label htmlFor="password" className="flex items-center text-sm font-bold text-gray-700 mb-2">
+              <span className="text-lg mr-2">🔒</span>
+              Password
+            </label>
+            <div className="relative">
+              <input
+                type={showPassword ? "text" : "password"}
+                id="password"
+                name="password"
+                value={formData.password}
+                onChange={handleInputChange}
+                className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200 text-lg transition-all duration-300"
+                placeholder="Create a strong password"
+                required
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400 hover:text-gray-600 transition-colors duration-200"
+              >
+                <span className="text-lg">{showPassword ? "🙈" : "👀"}</span>
+              </button>
+            </div>
+          </div>
+
+          {/* Confirm Password Field - Only show for admins */}
+          {userType === 'admin' && (
             <div>
               <label htmlFor="confirmPassword" className="flex items-center text-sm font-bold text-gray-700 mb-2">
                 <span className="text-lg mr-2">🔒</span>
@@ -275,7 +368,7 @@ function SignupPage() {
                   onChange={handleInputChange}
                   className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200 text-lg transition-all duration-300"
                   placeholder="Confirm your password"
-                  required
+                  required={userType === 'admin'}
                 />
                 <button
                   type="button"
@@ -286,27 +379,7 @@ function SignupPage() {
                 </button>
               </div>
             </div>
-          </div>
-
-          {/* Terms and Conditions */}
-          <div className="flex items-start space-x-3 p-4 bg-blue-50 rounded-xl border border-blue-200">
-            <input
-              type="checkbox"
-              id="terms"
-              className="mt-1 w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
-              required
-            />
-            <label htmlFor="terms" className="text-sm text-gray-700">
-              I agree to the{" "}
-              <a href="#" className="text-blue-600 hover:text-blue-700 font-semibold underline">
-                Terms and Conditions
-              </a>{" "}
-              and{" "}
-              <a href="#" className="text-blue-600 hover:text-blue-700 font-semibold underline">
-                Privacy Policy
-              </a>
-            </label>
-          </div>
+          )}
 
           {/* Submit Button */}
           <button
@@ -322,7 +395,7 @@ function SignupPage() {
             ) : (
               <>
                 <span className="mr-2">🎉</span>
-                Start My Learning Adventure!
+                {userType === 'admin' ? 'Create Admin Account!' : 'Start My Learning Adventure!'}
               </>
             )}
           </button>

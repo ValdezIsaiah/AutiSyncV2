@@ -593,10 +593,10 @@ export default function StudentProfile() {
             {[
               { icon: '⭐', title: 'First Steps', color: 'from-yellow-400 to-yellow-600' },
               { icon: '🎓', title: 'Academic Star', color: 'from-blue-400 to-blue-600' },
-              { icon: '🦋', title: 'Social Butterfly', color: 'from-pink-400 to-pink-600' },
-              { icon: '👂', title: 'Communication', color: 'from-green-400 to-green-600' },
-              { icon: '🧩', title: 'Puzzle Master', color: 'from-indigo-400 to-indigo-600' },
-              { icon: '🖌️', title: 'Creative Artist', color: 'from-teal-400 to-teal-600' }
+              { icon: '🎨', title: 'Color Master', color: 'from-purple-400 to-purple-600' },
+              { icon: '�', title: 'Shape Explorer', color: 'from-blue-400 to-indigo-600' },
+              { icon: '🔢', title: 'Number Ninja', color: 'from-green-400 to-green-600' },
+              { icon: '🤝', title: 'Helper Badge', color: 'from-orange-400 to-orange-600' }
             ].map((achievement, index) => (
               <div 
                 key={index}
@@ -626,10 +626,13 @@ export default function StudentProfile() {
             {[
               { icon: '⭐', title: 'First Steps', color: 'from-yellow-400 to-yellow-600' },
               { icon: '🎓', title: 'Academic Star', color: 'from-blue-400 to-blue-600' },
-              { icon: '🦋', title: 'Social Butterfly', color: 'from-pink-400 to-pink-600' },
-              { icon: '👂', title: 'Communication', color: 'from-green-400 to-green-600' },
-              { icon: '🧩', title: 'Puzzle Master', color: 'from-indigo-400 to-indigo-600' },
-              { icon: '🖌️', title: 'Creative Artist', color: 'from-teal-400 to-teal-600' }
+              { icon: '🎨', title: 'Color Master', color: 'from-purple-400 to-purple-600' },
+              { icon: '�', title: 'Shape Explorer', color: 'from-blue-400 to-indigo-600' },
+              { icon: '🔢', title: 'Number Ninja', color: 'from-green-400 to-green-600' },
+              { icon: '📅', title: 'Consistency Champ', color: 'from-gray-400 to-gray-600' },
+              { icon: '�', title: 'Helper Badge', color: 'from-orange-400 to-orange-600' },
+              { icon: '🏠', title: 'Daily Life Hero', color: 'from-teal-400 to-teal-600' },
+              { icon: '🏆', title: 'All-Rounder', color: 'from-yellow-400 to-yellow-600' }
             ].map((achievement, index) => (
               <div 
                 key={index}

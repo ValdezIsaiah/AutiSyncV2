@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { AcademicCapIcon, PencilIcon, CheckIcon, XMarkIcon, UserCircleIcon, CalendarIcon, MapPinIcon, IdentificationIcon } from '@heroicons/react/24/solid';
+import { supabase } from '../lib/supabase';
+import { AcademicCapIcon, PencilIcon, CheckIcon, XMarkIcon, UserCircleIcon, CalendarIcon, MapPinIcon, IdentificationIcon, ArrowRightOnRectangleIcon } from '@heroicons/react/24/solid';
 
 export default function AdminProfile() {
   const [showProfile, setShowProfile] = useState(true);
@@ -19,7 +20,6 @@ export default function AdminProfile() {
     address: "Sinto Dos, Bajada, Davao City",
     phone: "+63 912 345 6789",
     gender: "Female",
-    yearsExperience: "8 years",
     education: "Master's in Special Education"
   });
 
@@ -28,6 +28,20 @@ export default function AdminProfile() {
   // Function to handle "Back" button
   const backToHome = () => {
     navigate('/tracking');
+  };
+
+  // Function to handle logout
+  const handleLogout = async () => {
+    try {
+      const { error } = await supabase.auth.signOut();
+      if (error) {
+        console.error('Error logging out:', error);
+      } else {
+        navigate('/'); // Redirect to LandingPage
+      }
+    } catch (error) {
+      console.error('Unexpected error during logout:', error);
+    }
   };
 
   // Handle edit button click
@@ -139,22 +153,28 @@ export default function AdminProfile() {
                       <span className="bg-white/20 px-3 py-1 rounded-full text-sm">
                         ID: {userInfo.employeeId}
                       </span>
-                      <span className="bg-white/20 px-3 py-1 rounded-full text-sm">
-                        {userInfo.yearsExperience}
-                      </span>
                     </div>
                   </div>
 
                   {/* Action Buttons */}
                   <div className="flex space-x-3">
                     {!isEditing ? (
-                      <button
-                        onClick={handleEditClick}
-                        className="bg-white text-blue-600 px-6 py-3 rounded-xl font-semibold flex items-center space-x-2 hover:bg-gray-50 transition-colors shadow-lg"
-                      >
-                        <PencilIcon className="w-5 h-5" />
-                        <span>Edit Profile</span>
-                      </button>
+                      <>
+                        <button
+                          onClick={handleEditClick}
+                          className="bg-white text-blue-600 px-6 py-3 rounded-xl font-semibold flex items-center space-x-2 hover:bg-gray-50 transition-colors shadow-lg"
+                        >
+                          <PencilIcon className="w-5 h-5" />
+                          <span>Edit Profile</span>
+                        </button>
+                        <button
+                          onClick={handleLogout}
+                          className="bg-red-500 text-white px-6 py-3 rounded-xl font-semibold flex items-center space-x-2 hover:bg-red-600 transition-colors shadow-lg"
+                        >
+                          <ArrowRightOnRectangleIcon className="w-5 h-5" />
+                          <span>Logout</span>
+                        </button>
+                      </>
                     ) : (
                       <div className="flex space-x-2">
                         <button
@@ -375,22 +395,6 @@ export default function AdminProfile() {
                         )}
                       </div>
 
-                      {/* Years of Experience */}
-                      <div className="bg-purple-50 rounded-xl p-4">
-                        <label className="block text-sm font-medium text-gray-600 mb-2">Years of Experience</label>
-                        {isEditing ? (
-                          <input
-                            type="text"
-                            name="yearsExperience"
-                            value={userInfo.yearsExperience}
-                            onChange={handleChange}
-                            className="w-full p-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-                          />
-                        ) : (
-                          <p className="text-lg font-semibold text-gray-800">{userInfo.yearsExperience}</p>
-                        )}
-                      </div>
-
                       {/* Education */}
                       <div className="bg-purple-50 rounded-xl p-4">
                         <label className="block text-sm font-medium text-gray-600 mb-2">Education</label>
@@ -405,29 +409,6 @@ export default function AdminProfile() {
                         ) : (
                           <p className="text-lg font-semibold text-gray-800">{userInfo.education}</p>
                         )}
-                      </div>
-
-                      {/* Quick Stats */}
-                      <div className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-xl p-6 mt-6">
-                        <h4 className="text-lg font-bold text-gray-800 mb-4">Quick Stats</h4>
-                        <div className="grid grid-cols-2 gap-4">
-                          <div className="text-center">
-                            <div className="text-2xl font-bold text-blue-600">24</div>
-                            <div className="text-sm text-gray-600">Students</div>
-                          </div>
-                          <div className="text-center">
-                            <div className="text-2xl font-bold text-purple-600">12</div>
-                            <div className="text-sm text-gray-600">Activities</div>
-                          </div>
-                          <div className="text-center">
-                            <div className="text-2xl font-bold text-green-600">89%</div>
-                            <div className="text-sm text-gray-600">Success Rate</div>
-                          </div>
-                          <div className="text-center">
-                            <div className="text-2xl font-bold text-orange-600">5.0</div>
-                            <div className="text-sm text-gray-600">Rating</div>
-                          </div>
-                        </div>
                       </div>
                     </div>
                   </div>

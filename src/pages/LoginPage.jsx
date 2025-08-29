@@ -9,6 +9,7 @@ function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [userType, setUserType] = useState("student"); // "student" or "admin"
 
   const navigate = useNavigate();
 
@@ -45,7 +46,13 @@ function LoginPage() {
 
       // Login successful
       console.log('Login successful:', data);
-      navigate("/home"); // Redirect to home page
+      
+      // Redirect based on user type
+      if (userType === "admin") {
+        navigate("/tracking"); // Redirect admin to tracking page
+      } else {
+        navigate("/home"); // Redirect student to home page
+      }
     } catch (error) {
       console.error('Login error:', error);
       setError('An unexpected error occurred. Please try again.');
@@ -55,7 +62,7 @@ function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 relative overflow-hidden flex items-center justify-center p-4">
+  <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 relative overflow-hidden flex items-center justify-center p-4">
       {/* Animated background elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-20 left-20 w-64 h-64 bg-blue-200/20 rounded-full blur-3xl animate-float"></div>
@@ -72,7 +79,7 @@ function LoginPage() {
             </div>
           </div>
           <h2 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-2">
-            AutiSync
+            AutiSync v2.0
           </h2>
           <div className="bg-gradient-to-r from-yellow-100 to-orange-100 rounded-xl p-3 mb-3">
             <h3 className="text-xl font-bold text-gray-800 flex items-center justify-center">
@@ -93,6 +100,23 @@ function LoginPage() {
         )}
 
         <form className="space-y-5" onSubmit={handleLogin}>
+          {/* User type selection */}
+          <div className="flex justify-center gap-4 mb-2">
+            <button
+              type="button"
+              className={`px-6 py-2 rounded-xl font-bold border-2 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-200 text-base shadow-sm ${userType === 'student' ? 'bg-blue-100 border-blue-500 text-blue-900' : 'bg-white border-gray-300 text-gray-600'}`}
+              onClick={() => setUserType('student')}
+            >
+              👦 Student
+            </button>
+            <button
+              type="button"
+              className={`px-6 py-2 rounded-xl font-bold border-2 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-purple-200 text-base shadow-sm ${userType === 'admin' ? 'bg-purple-100 border-purple-500 text-purple-900' : 'bg-white border-gray-300 text-gray-600'}`}
+              onClick={() => setUserType('admin')}
+            >
+              🧑‍🏫 Admin
+            </button>
+          </div>
           <div>
             <label
               htmlFor="email"
@@ -164,12 +188,12 @@ function LoginPage() {
             {loading ? (
               <>
                 <span className="mr-2">⏳</span>
-                Logging in...
+                Logging in as {userType === 'admin' ? 'Admin' : 'Student'}...
               </>
             ) : (
               <>
                 <span className="mr-2">🚀</span>
-                Start Learning!
+                {userType === 'admin' ? 'Login as Admin' : 'Start Learning!'}
               </>
             )}
           </button>
