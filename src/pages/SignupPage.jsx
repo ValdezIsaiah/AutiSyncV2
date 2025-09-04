@@ -52,13 +52,6 @@ function SignupPage() {
       return;
     }
 
-    // Validate passwords match (only for admin accounts)
-    if (userType === 'admin' && formData.password !== formData.confirmPassword) {
-      setError("Passwords do not match!");
-      setLoading(false);
-      return;
-    }
-
     // Validate password length
     if (formData.password.length < 6) {
       setError("Password must be at least 6 characters long!");
@@ -77,9 +70,9 @@ function SignupPage() {
             age: userType === 'student' ? parseInt(formData.age) : null,
             parent_email: userType === 'student' ? formData.parentEmail : null,
             address: formData.address,
-            gender: formData.gender, // Gender for both students and admins
+            gender: formData.gender,
             phone_number: userType === 'admin' ? formData.phoneNumber : null,
-            user_type: userType // Store the user type
+            user_type: userType
           }
         }
       });
@@ -352,34 +345,32 @@ function SignupPage() {
             </div>
           </div>
 
-          {/* Confirm Password Field - Only show for admins */}
-          {userType === 'admin' && (
-            <div>
-              <label htmlFor="confirmPassword" className="flex items-center text-sm font-bold text-gray-700 mb-2">
-                <span className="text-lg mr-2">🔒</span>
-                Confirm Password
-              </label>
-              <div className="relative">
-                <input
-                  type={showConfirmPassword ? "text" : "password"}
-                  id="confirmPassword"
-                  name="confirmPassword"
-                  value={formData.confirmPassword}
-                  onChange={handleInputChange}
-                  className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200 text-lg transition-all duration-300"
-                  placeholder="Confirm your password"
-                  required={userType === 'admin'}
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                  className="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400 hover:text-gray-600 transition-colors duration-200"
-                >
-                  <span className="text-lg">{showConfirmPassword ? "🙈" : "👀"}</span>
-                </button>
-              </div>
+          {/* Confirm Password Field */}
+          <div>
+            <label htmlFor="confirmPassword" className="flex items-center text-sm font-bold text-gray-700 mb-2">
+              <span className="text-lg mr-2">🔒</span>
+              Confirm Password
+            </label>
+            <div className="relative">
+              <input
+                type={showConfirmPassword ? "text" : "password"}
+                id="confirmPassword"
+                name="confirmPassword"
+                value={formData.confirmPassword}
+                onChange={handleInputChange}
+                className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200 text-lg transition-all duration-300"
+                placeholder="Confirm your password"
+                required
+              />
+              <button
+                type="button"
+                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                className="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400 hover:text-gray-600 transition-colors duration-200"
+              >
+                <span className="text-lg">{showConfirmPassword ? "🙈" : "👀"}</span>
+              </button>
             </div>
-          )}
+          </div>
 
           {/* Submit Button */}
           <button

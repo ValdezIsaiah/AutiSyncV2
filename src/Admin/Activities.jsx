@@ -1,13 +1,94 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AcademicCapIcon, PlusIcon, PlayIcon, ClockIcon, StarIcon } from '@heroicons/react/24/solid';
+import activitiesService from '../lib/activitiesService';
+import categoriesService from '../lib/categoriesService';
 
 const ActivitiesPage = () => {
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
+  const [activities, setActivities] = useState([]);
+  const [categories, setCategories] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+  const [stats, setStats] = useState({ total: 0, byCategory: {} });
 
-  const activities = [
+  // Fetch activities on component mount
+  useEffect(() => {
+    fetchActivities();
+    fetchCategories();
+    fetchStats();
+  }, []);
+
+  const fetchCategories = async () => {
+    try {
+      const { data, error } = await categoriesService.getActiveCategories();
+      
+      if (error) {
+        console.error('Error fetching categories:', error);
+        // Fallback to default categories
+        setCategories(getDefaultCategories());
+      } else {
+        // Transform categories to match the expected format
+        const formattedCategories = [
+          { value: 'all', label: 'All Activities', icon: '📚' },
+          ...(data || []).map(cat => ({
+            value: cat.name,
+            label: cat.name,
+            icon: cat.icon
+          }))
+        ];
+        setCategories(formattedCategories);
+      }
+    } catch (err) {
+      console.error('Error fetching categories:', err);
+      setCategories(getDefaultCategories());
+    }
+  };
+
+  const getDefaultCategories = () => [
+    { value: 'all', label: 'All Activities', icon: '📚' },
+    { value: 'Academic', label: 'Academic Skills', icon: '📖' },
+    { value: 'Social/Daily Life', label: 'Social & Daily Life', icon: '👥' },
+    { value: 'Objects', label: 'Object Recognition', icon: '🧩' }
+  ];
+
+  const fetchActivities = async () => {
+    try {
+      setLoading(true);
+      const { data, error } = await activitiesService.getAllActivities();
+      
+      if (error) {
+        setError(error);
+        // Fallback to sample data if database fails
+        setActivities(getSampleActivities());
+      } else {
+        setActivities(data || []);
+      }
+    } catch (err) {
+      console.error('Error fetching activities:', err);
+      setError('Failed to load activities');
+      // Fallback to sample data
+      setActivities(getSampleActivities());
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const fetchStats = async () => {
+    try {
+      const { data } = await activitiesService.getActivityStats();
+      if (data) {
+        setStats(data);
+      }
+    } catch (err) {
+      console.error('Error fetching stats:', err);
+    }
+  };
+
+  // Sample data as fallback
+  const getSampleActivities = () => [
     {
       id: 1,
       title: 'Counting Adventures',
@@ -54,19 +135,60 @@ const ActivitiesPage = () => {
     }
   ];
 
-  const categories = [
-    { value: 'all', label: 'All Activities', icon: '📚' },
-    { value: 'Academic', label: 'Academic Skills', icon: '📖' },
-    { value: 'Social/Daily Life', label: 'Social & Daily Life', icon: '👥' },
-    { value: 'Objects', label: 'Object Recognition', icon: '🧩' }
-  ];
+  // Handle search functionality  
+  const handleSearch = async (searchValue) => {
+    setSearchTerm(searchValue);
+    if (searchValue.trim() === '') {
+      fetchActivities();
+      return;
+    }
 
-  const filteredActivities = activities.filter(activity => {
-    const matchesSearch = activity.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         activity.description.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesCategory = selectedCategory === 'all' || activity.category === selectedCategory;
-    return matchesSearch && matchesCategory;
-  });
+    try {
+      setLoading(true);
+      const { data, error } = await activitiesService.searchActivities(searchValue);
+      
+      if (error) {
+        setError(error);
+      } else {
+        setActivities(data || []);
+      }
+    } catch (err) {
+      console.error('Error searching activities:', err);
+      setError('Failed to search activities');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Handle category filter
+  const handleCategoryFilter = async (category) => {
+    setSelectedCategory(category);
+    
+    try {
+      setLoading(true);
+      let data, error;
+      
+      if (category === 'all') {
+        ({ data, error } = await activitiesService.getAllActivities());
+      } else {
+        ({ data, error } = await activitiesService.getActivitiesByCategory(category));
+      }
+      
+      if (error) {
+        setError(error);
+      } else {
+        setActivities(data || []);
+      }
+    } catch (err) {
+      console.error('Error filtering activities:', err);
+      setError('Failed to filter activities');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Activities are already filtered via database queries, so we can use them directly
+  const filteredActivities = activities;
 
   const addActivity = (e) => {
     e.preventDefault();
@@ -108,6 +230,9 @@ const ActivitiesPage = () => {
               </a>
               <a href="/activities" className="text-blue-600 font-semibold border-b-2 border-blue-600 pb-1 transition-colors">
                 Activities
+              </a>
+              <a href="/categories" className="text-gray-600 hover:text-blue-600 font-medium transition-colors">
+                Categories
               </a>
               <a href="/alarmingemotions" className="text-gray-600 hover:text-blue-600 font-medium transition-colors">
                 Expression Wall
@@ -156,7 +281,7 @@ const ActivitiesPage = () => {
                 type="text"
                 placeholder="Search activities..."
                 value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
+                onChange={(e) => handleSearch(e.target.value)}
                 className="w-full pl-12 pr-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-700"
               />
               <div className="absolute left-4 top-3.5">
@@ -171,7 +296,7 @@ const ActivitiesPage = () => {
               {categories.map((category) => (
                 <button
                   key={category.value}
-                  onClick={() => setSelectedCategory(category.value)}
+                  onClick={() => handleCategoryFilter(category.value)}
                   className={`p-3 rounded-xl text-sm font-medium transition-all duration-200 flex items-center space-x-2 ${
                     selectedCategory === category.value
                       ? 'bg-blue-500 text-white shadow-lg transform scale-105'
@@ -225,9 +350,38 @@ const ActivitiesPage = () => {
           </div>
         </div>
 
+        {/* Error Message */}
+        {error && (
+          <div className="bg-red-50 border border-red-200 rounded-xl p-4 mb-6">
+            <div className="flex">
+              <div className="flex-shrink-0">
+                <svg className="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
+                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+                </svg>
+              </div>
+              <div className="ml-3">
+                <h3 className="text-sm font-medium text-red-800">Error loading activities</h3>
+                <div className="mt-2 text-sm text-red-700">
+                  <p>{error}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Loading State */}
+        {loading && (
+          <div className="text-center py-12">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto mb-4"></div>
+            <h3 className="text-xl font-semibold text-gray-600 mb-2">Loading activities...</h3>
+            <p className="text-gray-500">Please wait while we fetch the latest activities</p>
+          </div>
+        )}
+
         {/* Activities Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-          {filteredActivities.map((activity) => (
+        {!loading && (
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+            {filteredActivities.map((activity) => (
             <div
               key={activity.id}
               className="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 border border-gray-100 overflow-hidden"
@@ -272,9 +426,10 @@ const ActivitiesPage = () => {
               </div>
             </div>
           ))}
-        </div>
+          </div>
+        )}
 
-        {filteredActivities.length === 0 && (
+        {!loading && filteredActivities.length === 0 && (
           <div className="text-center py-12">
             <div className="text-6xl mb-4">🔍</div>
             <h3 className="text-xl font-semibold text-gray-600 mb-2">No activities found</h3>

@@ -21,6 +21,7 @@ import FlashcardsPage from './pages/FlashcardsPage';
 // Admin pages
 import ActivitiesPage from './Admin/Activities';
 import AddActivity from './Admin/AddActivity';
+import CategoriesManagement from './Admin/CategoriesManagement';
 import ExpressionWall from './Admin/ExpressionWall';
 import Tracking from './Admin/Tracking';
 import AdminProfile from './Admin/AdminProfile.jsx';
@@ -50,6 +51,7 @@ function App() {
         {/* Admin Pages */}
         <Route path="/activities" element={<ActivitiesPage />} />
         <Route path="/addactivity" element={<AddActivity />} />
+        <Route path="/categories" element={<CategoriesManagement />} />
         <Route path="/expressionwall" element={<ExpressionWall />} />
         <Route path="/tracking" element={<Tracking />} />
         <Route path="/adminprofile" element={<AdminProfile />} />

@@ -1,6 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AcademicCapIcon, PlusIcon, PhotoIcon, TrashIcon, CheckCircleIcon, VideoCameraIcon } from '@heroicons/react/24/solid';
+import activitiesService from '../lib/activitiesService';
+import categoriesService from '../lib/categoriesService';
 
 const AddActivity = () => {
   const navigate = useNavigate();
@@ -14,6 +16,41 @@ const AddActivity = () => {
   const [preview, setPreview] = useState(null);
   const [mediaType, setMediaType] = useState(null); // 'image' or 'video'
 
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  const [categories, setCategories] = useState([]);
+
+  useEffect(() => {
+    fetchCategories();
+  }, []);
+
+  const fetchCategories = async () => {
+    try {
+      const { data, error } = await categoriesService.getActiveCategories();
+      
+      if (error) {
+        console.error('Error fetching categories:', error);
+        // Fallback to default categories
+        setCategories([
+          { name: 'Academic', icon: '📚' },
+          { name: 'Social/Daily Life', icon: '👥' },
+          { name: 'Objects', icon: '🧸' },
+          { name: 'Creative', icon: '🎨' }
+        ]);
+      } else {
+        setCategories(data || []);
+      }
+    } catch (err) {
+      console.error('Error fetching categories:', err);
+      setCategories([
+        { name: 'Academic', icon: '📚' },
+        { name: 'Social/Daily Life', icon: '👥' },
+        { name: 'Objects', icon: '🧸' },
+        { name: 'Creative', icon: '🎨' }
+      ]);
+    }
+  };
+
   const [choices, setChoices] = useState([
     { title: '', isCorrect: false },
     { title: '', isCorrect: false },
@@ -21,21 +58,52 @@ const AddActivity = () => {
     { title: '', isCorrect: false }
   ]);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Here you can handle the form submission (e.g., send the data to an API)
-    console.log({ 
-      activityName, 
-      activityType, 
-      question, 
-      category, 
-      difficulty, 
-      choices, 
-      media, 
-      mediaType 
-    });
-    // Navigate back to activities page after successful submission
-    navigate('/activities');
+    setLoading(true);
+    setError('');
+
+    try {
+      // Validate required fields
+      if (!activityName.trim()) {
+        throw new Error('Activity name is required');
+      }
+      if (!category) {
+        throw new Error('Category is required');
+      }
+      if (!difficulty) {
+        throw new Error('Difficulty is required');
+      }
+
+      // Prepare activity data
+      const activityData = {
+        title: activityName.trim(),
+        description: question.trim() || `A ${difficulty.toLowerCase()} ${category.toLowerCase()} activity`,
+        category: category,
+        difficulty: difficulty,
+        duration: '15 mins', // Default duration, could be made configurable
+        // Additional fields that might be in your database
+        activity_type: activityType,
+        question: question.trim(),
+        choices: JSON.stringify(choices), // Store choices as JSON
+        media_type: mediaType,
+        // You might want to handle file upload separately
+      };
+
+      const { data, error } = await activitiesService.createActivity(activityData);
+      
+      if (error) {
+        throw new Error(error);
+      }
+
+      // Success! Navigate back to activities page
+      navigate('/activities');
+    } catch (err) {
+      console.error('Error creating activity:', err);
+      setError(err.message || 'Failed to create activity');
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleMediaChange = (e) => {
@@ -99,6 +167,9 @@ const AddActivity = () => {
                           <a href="/activities" className="text-blue-600 font-semibold border-b-2 border-blue-600 pb-1 transition-colors">
                             Activities
                           </a>
+                          <a href="/categories" className="text-gray-600 hover:text-blue-600 font-medium transition-colors">
+                            Categories
+                          </a>
                           <a href="/alarmingemotions" className="text-gray-600 hover:text-blue-600 font-medium transition-colors">
                             Expression Wall
                           </a>
@@ -134,6 +205,25 @@ const AddActivity = () => {
             <span>← Back to Activities</span>
           </button>
         </div>
+
+        {/* Error Message */}
+        {error && (
+          <div className="bg-red-50 border border-red-200 rounded-xl p-4 mb-6">
+            <div className="flex">
+              <div className="flex-shrink-0">
+                <svg className="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
+                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+                </svg>
+              </div>
+              <div className="ml-3">
+                <h3 className="text-sm font-medium text-red-800">Error creating activity</h3>
+                <div className="mt-2 text-sm text-red-700">
+                  <p>{error}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
 
         <form onSubmit={handleSubmit} className="space-y-8">
           {/* Activity Details Section */}
@@ -203,10 +293,11 @@ const AddActivity = () => {
                         required
                       >
                         <option value="">Select a category</option>
-                        <option value="Academic">📚 Academic Skills</option>
-                        <option value="Social/Daily Life">👥 Social & Daily Life</option>
-                        <option value="Objects">🧸 Object Recognition</option>
-                        <option value="Creative">🎨 Creative Activities</option>
+                        {categories.map((cat) => (
+                          <option key={cat.id || cat.name} value={cat.name}>
+                            {cat.icon} {cat.name}
+                          </option>
+                        ))}
                       </select>
                     </div>
 
@@ -411,10 +502,24 @@ const AddActivity = () => {
             </button>
             <button
               type="submit"
-              className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-8 py-3 rounded-xl font-semibold flex items-center space-x-2 shadow-lg transition-all duration-200 transform hover:scale-105"
+              disabled={loading}
+              className={`${
+                loading 
+                  ? 'bg-gray-400 cursor-not-allowed' 
+                  : 'bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700'
+              } text-white px-8 py-3 rounded-xl font-semibold flex items-center space-x-2 shadow-lg transition-all duration-200 transform hover:scale-105`}
             >
-              <CheckCircleIcon className="w-5 h-5" />
-              <span>Create Flashcard</span>
+              {loading ? (
+                <>
+                  <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
+                  <span>Creating...</span>
+                </>
+              ) : (
+                <>
+                  <CheckCircleIcon className="w-5 h-5" />
+                  <span>Create Flashcard</span>
+                </>
+              )}
             </button>
           </div>
               </div>

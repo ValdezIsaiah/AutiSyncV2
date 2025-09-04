@@ -12,8 +12,7 @@ export default function StudentProfile() {
   const { user } = useAuth();
   const [userInfo, setUserInfo] = useState({
     username: "",
-    first_name: "",
-    last_name: "",
+    full_name: "",
     birthday: "",
     address: "",
     gender: "",
@@ -53,7 +52,7 @@ export default function StudentProfile() {
         .from('user_profiles')
         .select('*')
         .eq('id', user.id)
-        .maybeSingle(); // Use maybeSingle instead of single to avoid error if no record exists
+        .maybeSingle();
 
       if (error) {
         console.error('Error fetching profile:', error);
@@ -64,10 +63,9 @@ export default function StudentProfile() {
       if (data) {
         console.log('Profile data found:', data);
         setUserInfo({
-          username: data.username || `${data.first_name} ${data.last_name}`.trim(),
-          first_name: data.first_name || '',
-          last_name: data.last_name || '',
-          birthday: data.birthday || '',
+          username: data.username || data.full_name || '',
+          full_name: data.full_name || '',
+          birthday: data.birthdate || '',
           address: data.address || '',
           gender: data.gender || '',
           grade: data.grade || '',
@@ -87,7 +85,6 @@ export default function StudentProfile() {
         });
       } else {
         console.log('No profile found, creating default profile');
-        // No profile exists, create one with default values
         await createUserProfile();
       }
     } catch (error) {
@@ -106,8 +103,8 @@ export default function StudentProfile() {
         .insert({
           id: user.id,
           username: user.user_metadata?.full_name || 'New User',
-          first_name: user.user_metadata?.first_name || '',
-          last_name: user.user_metadata?.last_name || '',
+          full_name: user.user_metadata?.full_name || 'New User',
+          gender: userInfo.gender || '',
           email: user.email,
           age: user.user_metadata?.age || null,
           parent_email: user.user_metadata?.parent_email || '',
@@ -134,7 +131,6 @@ export default function StudentProfile() {
       }
 
       console.log('Profile created successfully:', data);
-      // Fetch the profile again after creation
       await fetchUserProfile();
     } catch (error) {
       console.error('Error creating profile:', error);
@@ -149,17 +145,15 @@ export default function StudentProfile() {
       setSuccess("");
 
       console.log('Saving profile for user:', user.id);
-      console.log('Profile data to save:', userInfo);
 
       const profileData = {
         id: user.id,
-        username: userInfo.username || `${userInfo.first_name} ${userInfo.last_name}`.trim(),
-        first_name: userInfo.first_name,
-        last_name: userInfo.last_name,
-        email: user.email, // Always use the current user's email
-        birthday: userInfo.birthday || null,
-        address: userInfo.address,
+        username: userInfo.username || userInfo.full_name,
+        full_name: userInfo.full_name || userInfo.username,
+        email: user.email,
         gender: userInfo.gender,
+        birthdate: userInfo.birthday || null,
+        address: userInfo.address,
         grade: userInfo.grade,
         school: userInfo.school,
         interests: userInfo.interests,
