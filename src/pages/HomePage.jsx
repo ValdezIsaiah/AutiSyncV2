@@ -1,5 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from 'react-router-dom';
+import StudentCharacter from '../components/StudentCharacter';
+
+import { useAuth } from '../contexts/AuthContext';
+import { supabase } from '../lib/supabase';
+
 
 const Emotions = [
   { name: "Happy", image: "src/assets/happy.png", color: "from-yellow-400 to-orange-500", bgColor: "bg-yellow-50" },
@@ -13,38 +18,397 @@ const HomePage = () => {
   const [selectedEmotion, setSelectedEmotion] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [selectedLevel, setSelectedLevel] = useState(3);
+
+  const [emotionNote, setEmotionNote] = useState("");
   const [expressions, setExpressions] = useState([
-    { emotion: "Happy", description: "Feeling Happy at level 2", image: "src/assets/happy.png", level: 2, time: "2 hours ago", userName: "Emma" },
-    { emotion: "Calm", description: "Feeling calm at level 5", image: "src/assets/calm.png", level: 5, time: "5 hours ago", userName: "Alex" },
-    { emotion: "Excited", description: "Feeling excited at level 4", image: "src/assets/excited.png", level: 4, time: "Yesterday", userName: "Sam" },
-    { emotion: "Calm", description: "Feeling calm at level 2", image: "src/assets/calm.png", level: 2, time: "1 hour ago", userName: "Jordan" },
-    { emotion: "Sad", description: "Feeling sad at level 3", image: "src/assets/sad.png", level: 3, time: "2 hours ago", userName: "Riley" },
-    { emotion: "Excited", description: "Feeling excited at level 1", image: "src/assets/excited.png", level: 1, time: "Yesterday", userName: "Casey" },
+    { emotion: "Happy", image: "src/assets/happy.png", level: 2, time: "2 hours ago", userName: "Emma" },
+    { emotion: "Calm", image: "src/assets/calm.png", level: 5, time: "5 hours ago", userName: "Alex" },
+    { emotion: "Excited",  image: "src/assets/excited.png", level: 4, time: "Yesterday", userName: "Sam" },
+    { emotion: "Calm", image: "src/assets/calm.png", level: 2, time: "1 hour ago", userName: "Jordan" },
+    { emotion: "Sad",  image: "src/assets/sad.png", level: 3, time: "2 hours ago", userName: "Riley" },
+    { emotion: "Excited", image: "src/assets/excited.png", level: 1, time: "Yesterday", userName: "Casey" },
   ]);
 
+  const [note, setNote] = useState('');
+  const [userProfile, setUserProfile] = useState(null);
+  const { user } = useAuth();
+  
+
+
   const navigate = useNavigate();
+
+  // Helper function to get time ago
+  const getTimeAgo = (date) => {
+    const now = new Date();
+    const diffInMinutes = Math.floor((now - date) / (1000 * 60));
+    
+    if (diffInMinutes < 1) return "Just now";
+    if (diffInMinutes < 60) return `${diffInMinutes} minutes ago`;
+    
+    const diffInHours = Math.floor(diffInMinutes / 60);
+    if (diffInHours < 24) return `${diffInHours} hours ago`;
+    
+    const diffInDays = Math.floor(diffInHours / 24);
+    if (diffInDays === 1) return "Yesterday";
+    if (diffInDays < 7) return `${diffInDays} days ago`;
+    
+    return date.toLocaleDateString();
+  };
+
+  // Function to create an alert for high-intensity negative emotions
+  const createAlert = async (profileId, emotion, intensity, expressionId, note) => {
+    try {
+      console.log('Creating alert for profile:', profileId);
+      
+      // Get all admins to notify them
+      const { data: admins, error: adminError } = await supabase
+        .from('admins')
+        .select('id')
+        .limit(1); // Get first admin or adjust logic as needed
+
+      if (adminError) {
+        console.error('Error fetching admin:', adminError);
+      }
+
+      // Create alert with available data
+      const alertData = {
+        profile_id: profileId,
+        emotion_id: expressionId, // Using expression ID as emotion reference
+        intensity: intensity,
+        status: 'priority',
+        created_at: new Date().toISOString(),
+        message: `High-intensity ${emotion} detected (Level ${intensity})${note ? `: ${note}` : ''}`,
+        ...(admins && admins.length > 0 && { admin_id: admins[0].id })
+      };
+
+      const { data: alertResult, error: alertError } = await supabase
+        .from('alert')
+        .insert([alertData])
+        .select();
+
+      if (alertError) {
+        console.error('Error creating alert:', alertError);
+      } else {
+        console.log('Alert created successfully:', alertResult);
+        
+        // Create notification for admin
+        await createNotifications(profileId, emotion, intensity, note, null, admins?.[0]?.id);
+      }
+    } catch (error) {
+      console.error('Error in createAlert:', error);
+    }
+  };
+
+  // Function to create notifications for admin and parent
+  const createNotifications = async (profileId, emotion, intensity, note, parentId, adminId) => {
+    try {
+      const studentName = userProfile?.username || userProfile?.full_name?.split(' ')[0] || 'Student';
+      const message = `🚨 HIGH PRIORITY ALERT: ${studentName} submitted "${emotion}" with intensity level ${intensity}${note ? `. Note: "${note}"` : ''}. Please check on the student.`;
+
+      const notifications = [];
+
+      // Create notification for parent if exists
+      if (parentId) {
+        notifications.push({
+          profile_id: profileId,
+          message: message,
+          type: 'alert',
+          priority: 'high',
+          is_read: false,
+          created_at: new Date().toISOString()
+        });
+      }
+
+      // Create notification for admin if exists
+      if (adminId) {
+        notifications.push({
+          profile_id: profileId,
+          message: message,
+          type: 'alert',
+          priority: 'high',
+          is_read: false,
+          created_at: new Date().toISOString()
+        });
+      }
+
+      if (notifications.length > 0) {
+        const { data: notificationResult, error: notificationError } = await supabase
+          .from('notifications')
+          .insert(notifications)
+          .select();
+
+        if (notificationError) {
+          console.error('Error creating notifications:', notificationError);
+        } else {
+          console.log('Notifications created successfully:', notificationResult);
+        }
+      }
+    } catch (error) {
+      console.error('Error in createNotifications:', error);
+    }
+  };
+
+  // Fetch user profile data
+  useEffect(() => {
+    if (user) {
+      fetchUserProfile();
+      fetchExpressions();
+    }
+  }, [user]);
+
+  const fetchUserProfile = async () => {
+    if (!user) return;
+    
+    try {
+      const { data, error } = await supabase
+        .from('user_profiles')
+        .select('*')
+        .eq('user_id', user.id)
+        .single();
+
+      if (error) {
+        console.error('Error fetching profile:', error);
+      } else {
+        setUserProfile(data);
+      }
+    } catch (error) {
+      console.error('Error in fetchUserProfile:', error);
+    }
+  };
+
+  const fetchExpressions = async () => {
+    try {
+      console.log('Fetching expressions...');
+      
+      // Fetch all expressions with student and profile data using joins
+      const { data, error } = await supabase
+        .from('Expressions')
+        .select(`
+          *,
+          students!inner (
+            id,
+            profile_id,
+            user_profiles!inner (
+              id,
+              username,
+              full_name
+            )
+          )
+        `)
+        .order('created_at', { ascending: false })
+        .limit(50);
+
+      console.log('Expressions query result:', { data, error, count: data?.length });
+
+      if (error) {
+        console.error('Error fetching expressions:', error);
+        // Try a simpler query as fallback
+        const { data: simpleData, error: simpleError } = await supabase
+          .from('Expressions')
+          .select('*')
+          .order('created_at', { ascending: false })
+          .limit(50);
+        
+        console.log('Fallback simple query:', { simpleData, simpleError });
+        
+        if (!simpleError && simpleData) {
+          const simpleExpressions = simpleData.map(expr => ({
+            emotion: expr.emotion?.charAt(0).toUpperCase() + expr.emotion?.slice(1) || 'Unknown',
+            image: `src/assets/${expr.emotion || 'neutral'}.png`,
+            level: expr.intensity || 3,
+            time: getTimeAgo(new Date(expr.created_at)),
+            userName: 'Student',
+            note: expr.note || null
+          }));
+          setExpressions(simpleExpressions);
+        }
+        return;
+      }
+
+      if (data && data.length > 0) {
+        const formattedExpressions = data.map(expr => {
+          const profile = expr.students?.user_profiles;
+          const timeAgo = getTimeAgo(new Date(expr.created_at));
+          const displayName = profile ? (
+            profile.full_name || profile.username || 'Student'
+          ) : 'Student';
+          
+          return {
+            emotion: expr.emotion?.charAt(0).toUpperCase() + expr.emotion?.slice(1) || 'Unknown',
+            image: `src/assets/${expr.emotion || 'neutral'}.png`,
+            level: expr.intensity || 3,
+            time: timeAgo,
+            userName: displayName,
+            note: expr.note || null,
+            id: expr.id,
+            student_id: expr.student_id
+          };
+        });
+        
+        console.log('Formatted expressions:', formattedExpressions);
+        setExpressions(formattedExpressions);
+      } else {
+        console.log('No expressions found');
+        setExpressions([]);
+      }
+    } catch (error) {
+      console.error('Error in fetchExpressions:', error);
+      setExpressions([]);
+    }
+  };
 
   const handleEmotionClick = (emotion) => {
     setSelectedEmotion(emotion);
     setShowModal(true);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
+    if (!userProfile?.id) {
+      alert('User profile not loaded. Please refresh and try again.');
+      return;
+    }
+
     const emotionData = Emotions.find((emotion) => emotion.name === selectedEmotion);
+    const userName = userProfile?.full_name || userProfile?.username || user?.user_metadata?.full_name || user?.email?.split('@')[0] || 'Student';
+    
     const newExpression = {
       emotion: selectedEmotion,
-      description: `Feeling ${selectedEmotion} at level ${selectedLevel}`,
       image: emotionData?.image,
       level: selectedLevel,
       time: "Just now",
-      userName: "Chris", // Current user name from header
+      userName: userName,
     };
 
-    setExpressions((prev) => [newExpression, ...prev]);
+    // Save to Supabase Expressions table
+    try {
+      console.log('Starting emotion submission...');
+      console.log('User profile:', userProfile);
+      
+      // Look up student by profile_id
+      const { data: studentData, error: studentError } = await supabase
+        .from('students')
+        .select('id, profile_id')
+        .eq('profile_id', userProfile.id)
+        .single();
+
+      console.log('Student lookup result:', { studentData, studentError });
+
+      if (studentError || !studentData) {
+        console.error('Student lookup failed:', studentError);
+        
+        // Try to create a student record if one doesn't exist
+        console.log('Attempting to create student record...');
+        const { data: newStudent, error: createError } = await supabase
+          .from('students')
+          .insert([{
+            profile_id: userProfile.id,
+            created_at: new Date().toISOString()
+          }])
+          .select()
+          .single();
+          
+        if (createError) {
+          console.error('Failed to create student record:', createError);
+          alert('Could not set up student account. Please contact an administrator.');
+          return;
+        }
+        
+        console.log('Created new student record:', newStudent);
+        
+        // Use the newly created student data
+        const finalStudentData = newStudent;
+      }
+
+      console.log('Using student record:', {
+        id: (studentData || finalStudentData).id,
+        idType: typeof (studentData || finalStudentData).id,
+        profileId: (studentData || finalStudentData).profile_id
+      });
+
+      const currentStudent = studentData || finalStudentData;
+      const isNegativeHigh = (selectedEmotion.toLowerCase() === 'sad' || selectedEmotion.toLowerCase() === 'angry') && selectedLevel >= 4;
+      
+      // Prepare expression data for submission
+      const expressionData = {
+        student_id: currentStudent.id, // This is now UUID from students table
+        emotion: selectedEmotion.toLowerCase(),
+        intensity: selectedLevel,
+        note: (isNegativeHigh && note) ? note.trim() : null
+      };
+
+      console.log('Submitting expression:', expressionData);
+
+      const { data: expressionResult, error: expressionError } = await supabase
+        .from('Expressions')
+        .insert([expressionData])
+        .select()
+        .single();
+
+      if (expressionError) {
+        console.error('Expression creation failed:', expressionError);
+        alert(`Failed to save emotion: ${expressionError.message || 'Please try again.'}`);
+        return;
+      }
+
+      console.log('Expression saved successfully:', expressionResult);
+
+      // Verify the expression was actually saved by querying it back
+      const { data: verifyData, error: verifyError } = await supabase
+        .from('Expressions')
+        .select('*')
+        .eq('id', expressionResult.id)
+        .single();
+      
+      console.log('Expression verification:', { verifyData, verifyError });
+
+      // Also create User_emotion record for tracking (keep existing functionality)
+      const userEmotionData = {
+        profile_id: userProfile.id,
+        expressions_id: expressionResult.id,
+        intensity: selectedLevel,
+        created_at: new Date().toISOString()
+      };
+
+      const { error: userEmotionError } = await supabase
+        .from('User_emotion')
+        .insert([userEmotionData]);
+
+      if (userEmotionError) {
+        console.warn('Warning: Failed to create User_emotion record:', userEmotionError);
+      }
+
+      // Check if this is a high-intensity negative emotion that needs an alert
+      if (isNegativeHigh) {
+        await createAlert(userProfile.id, selectedEmotion, selectedLevel, expressionResult.id, note);
+      }
+      
+      // Don't add to local state immediately - let the refresh handle it
+      // This ensures we're showing data from the database, not local state
+      setShowModal(false);
+      setSelectedLevel(3);
+      setNote('');
+      
+      // Refresh expressions from database to show the new one
+      console.log('Refreshing expressions from database...');
+      await fetchExpressions();
+      
+      console.log('Emotion submitted and refreshed successfully!');
+      alert('Emotion submitted successfully!');
+    } catch (error) {
+      console.error('Unexpected error saving expression:', error);
+      alert('An unexpected error occurred. Please try again.');
+    }
+
+    // Reset form state (moved outside try-catch)
     setShowModal(false);
     setSelectedLevel(3);
+
+    setEmotionNote("");
+
+    // setNote('');
+
   };
 
   const studentPageRoute = () => navigate("/studentpage");
@@ -69,13 +433,15 @@ const HomePage = () => {
       </div>
 
       {/* Header */}
-      <header className="sticky top-0 z-10 bg-white/80 backdrop-blur-xl border-b border-white/20 shadow-sm">
-        <div className="container mx-auto px-3 py-2">
+      <header className="sticky top-0 z-10 bg-white/70 backdrop-blur-xl border-b border-white/20 shadow-sm">
+        <div className="container mx-auto px-3 py-1">
           <div className="flex justify-between items-center">
             <div className="flex items-center space-x-4">
-              <div className="w-12 h-12 bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl flex items-center justify-center shadow-lg">
-                <span className="text-white font-bold text-lg">A</span>
-              </div>
+              <img
+                  src="/src/assets/logo.png"
+                  alt="AutiSync Logo"
+                  className="w-16 h-16 object-contain"
+                />
               <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
                 AutiSync v2.0
               </h1>
@@ -104,7 +470,9 @@ const HomePage = () => {
                   alt="Profile"
                   className="w-10 h-10 rounded-xl object-cover border-2 border-white shadow-sm group-hover:scale-105 transition-transform duration-300"
                 />
-                <span className="hidden sm:block text-sm font-semibold text-gray-700">Chris</span>
+                <span className="hidden sm:block text-sm font-semibold text-gray-700">
+                  {userProfile?.full_name || userProfile?.username || user?.user_metadata?.full_name || user?.email?.split('@')[0] || 'Student'}
+                </span>
               </div>
             </div>
           </div>
@@ -245,7 +613,7 @@ const HomePage = () => {
                     className="card-autism-friendly bg-gradient-to-r from-blue-100 to-white p-6 rounded-2xl shadow-lg border-l-4 border-blue-500 w-82"
                     style={{animationDelay: `${index * 0.1}s`}}
                   >
-                    {/* Emotions shared container */}``
+                    {/* Emotions shared container */}```
                     <div className="flex items-center space-x-4">                
                       <div className="w-16 h-16 rounded-2xl overflow-hidden shadow-lg">
                         <img
@@ -293,7 +661,7 @@ const HomePage = () => {
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {/* Academic Category */}
-              <div className=" bg-gradient-to-br from-blue-50 to-indigo-50 p-8 rounded-3xl text-center cursor-pointer border-3 border-white/50 hover:border-blue-300 hover:shadow-xl transition-all duration-300 group">
+              <div className=" bg-gradient-to-br from-blue-50 to-indigo-50 p-8 rounded-3xl text-center border-3 border-white/50 hover:border-blue-300 hover:shadow-xl transition-all duration-300 group">
                 <div className="w-24 h-24 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-3xl mx-auto mb-6 flex items-center justify-center shadow-xl group-hover:scale-110 transition-transform duration-300">
                   <span className="text-white text-4xl">🎓</span>
                 </div>
@@ -304,7 +672,7 @@ const HomePage = () => {
               </div>
 
               {/* Social/Daily Life Skills Category */}
-              <div className=" bg-gradient-to-br from-orange-50 to-yellow-50 p-8 rounded-3xl text-center cursor-pointer border-3 border-white/50 hover:border-orange-300 hover:shadow-xl transition-all duration-300 group">
+              <div className=" bg-gradient-to-br from-orange-50 to-yellow-50 p-8 rounded-3xl text-center border-3 border-white/50 hover:border-orange-300 hover:shadow-xl transition-all duration-300 group">
                 <div className="w-24 h-24 bg-gradient-to-r from-orange-500 to-yellow-500 rounded-3xl mx-auto mb-6 flex items-center justify-center shadow-xl group-hover:scale-110 transition-transform duration-300">
                   <span className="text-white text-4xl">👥</span>
                 </div>
@@ -318,6 +686,8 @@ const HomePage = () => {
             </div>
           </div>
         </section>
+
+        
 
         {/* Difficulty Levels Section */}
         <section className="mb-12">
@@ -333,7 +703,7 @@ const HomePage = () => {
             
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {/* Easy Level */}
-              <div className=" bg-gradient-to-br from-green-50 to-emerald-50 p-8 rounded-3xl text-center cursor-pointer border-3 border-white/50 hover:border-green-300 hover:shadow-xl transition-all duration-300 group">
+              <div className=" bg-gradient-to-br from-green-50 to-emerald-50 p-8 rounded-3xl text-center border-3 border-white/50 hover:border-green-300 hover:shadow-xl transition-all duration-300 group">
                 <div className="w-24 h-24 bg-gradient-to-r from-green-500 to-emerald-600 rounded-3xl mx-auto mb-6 flex items-center justify-center shadow-xl group-hover:scale-110 transition-transform duration-300">
                   <span className="text-white text-4xl">✓</span>
                 </div>
@@ -344,7 +714,7 @@ const HomePage = () => {
               </div>
 
               {/* Medium Level */}
-              <div className="card-autism-friendly bg-gradient-to-br from-yellow-50 to-amber-50 p-8 rounded-3xl text-center cursor-pointer border-3 border-white/50 hover:border-yellow-300 hover:shadow-xl transition-all duration-300 group">
+              <div className="card-autism-friendly bg-gradient-to-br from-yellow-50 to-amber-50 p-8 rounded-3xl text-center  border-3 border-white/50 hover:border-yellow-300 hover:shadow-xl transition-all duration-300 group">
                 <div className="w-24 h-24 bg-gradient-to-r from-yellow-500 to-amber-500 rounded-3xl mx-auto mb-6 flex items-center justify-center shadow-xl group-hover:scale-110 transition-transform duration-300">
                   <span className="text-white text-4xl">⭐</span>
                 </div>
@@ -355,7 +725,7 @@ const HomePage = () => {
               </div>
 
               {/* Hard Level */}
-              <div className="card-autism-friendly bg-gradient-to-br from-red-50 to-rose-50 p-8 rounded-3xl text-center cursor-pointer border-3 border-white/50 hover:border-red-300 hover:shadow-xl transition-all duration-300 group">
+              <div className="card-autism-friendly bg-gradient-to-br from-red-50 to-rose-50 p-8 rounded-3xl text-center  border-3 border-white/50 hover:border-red-300 hover:shadow-xl transition-all duration-300 group">
                 <div className="w-24 h-24 bg-gradient-to-r from-red-500 to-rose-600 rounded-3xl mx-auto mb-6 flex items-center justify-center shadow-xl group-hover:scale-110 transition-transform duration-300">
                   <span className="text-white text-4xl">!</span>
                 </div>
@@ -378,6 +748,12 @@ const HomePage = () => {
                 </div>
           </div>
         </section>
+
+      
+      {/* Use the character component */}
+      {/* <StudentCharacter /> */}
+    
+    
           </div>
         </section>
 
@@ -399,7 +775,7 @@ const HomePage = () => {
               <h2 className="text-3xl font-bold text-gray-800 mb-2">
                 You're feeling <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">{selectedEmotion}</span>! 
               </h2>
-              <p className="text-gray-600 mb-6 text-lg">How strong is this feeling? Pick a number! 🎯</p>
+              {/* <p className="text-gray-600 mb-6 text-lg">How strong is this feeling? Pick a number! 🎯</p> */}
 
               {/* Level Selection */}
               <div className="mb-8">
@@ -447,20 +823,40 @@ const HomePage = () => {
                       {selectedLevel <= 2 ? '😌' : selectedLevel === 3 ? '😊' : selectedLevel === 4 ? '😄' : '🤗'}
                     </span>
                   </div>
-                  <p className="text-sm text-gray-600 mt-3 font-semibold">
+                  {/* <p className="text-sm text-gray-600 mt-3 font-semibold">
                     {selectedLevel === 1 ? "Just a tiny bit - barely noticeable" :
                      selectedLevel === 2 ? "A little bit - light feeling" :
                      selectedLevel === 3 ? "Medium amount - noticeable feeling" :
                      selectedLevel === 4 ? "Quite a lot - strong feeling" :
                      "Very much - overwhelming feeling"}
-                  </p>
+                  </p> */}
+                </div>
+
+                {/* Optional Note Section */}
+                <div className="space-y-2">
+                  <label className="block text-sm font-semibold text-gray-700">
+                    Note (Optional)
+                  </label>
+                  <textarea
+                    value={emotionNote}
+                    onChange={(e) => setEmotionNote(e.target.value)}
+                    placeholder="why?"
+                    className="w-full h-16 px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition-all duration-200 resize-none text-gray-700 placeholder-gray-400"
+                    maxLength={100}
+                  />
+                  
                 </div>
               </div>
+
+            
 
               {/* Action Buttons */}
               <div className="flex space-x-4">
                 <button
-                  onClick={() => setShowModal(false)}
+                  onClick={() => {
+                    setShowModal(false);
+                    setEmotionNote("");
+                  }}
                   className="flex-1 bg-gradient-to-r from-gray-100 to-gray-200 hover:from-gray-200 hover:to-gray-300 text-gray-700 py-4 px-6 rounded-xl font-bold text-lg transition-all duration-300 transform hover:scale-105 shadow-lg"
                 >
                   Cancel
